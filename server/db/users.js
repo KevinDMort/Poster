@@ -1,4 +1,4 @@
-import { connection, generateID } from './connection';
+import { connection, generateID } from './connection.js';
 
 export async function getUserByID(id) {
     try {

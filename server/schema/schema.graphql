@@ -1,7 +1,7 @@
 type Query {
     post(id: ID!): Post
     user(id: ID!): User
-    timeline:(id: ID!): [Post!]
+    timeline(id: ID!): [Post!]
 }
 
 type Post {
@@ -26,7 +26,7 @@ type Mutation {
   addPost(userID: ID!, content: String!): Post!
   addReply(userID: ID!, parentPostID: ID!, content: String!): Post!
   addUser(username: String!, password: String!, email: String!): User!
-  addLike(userID: ID!, postID: ID!)
-  addFollow(userID: ID!, isFollowingUser: ID!)
+  addLike(userID: ID!, postID: ID!): String
+  addFollow(userID: ID!, isFollowingUser: ID!): String
 }
 
