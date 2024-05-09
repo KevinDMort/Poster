@@ -6,7 +6,7 @@ const db = new sqlite3.Database('poster.db');
 // Create users table
 db.run(`
     CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id VARCHAR(36) PRIMARY KEY,
         username TEXT UNIQUE NOT NULL,
         password TEXT NOT NULL,
         email TEXT UNIQUE NOT NULL
@@ -16,20 +16,22 @@ db.run(`
 // Create posts table
 db.run(`
     CREATE TABLE IF NOT EXISTS posts (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        userID INTEGER NOT NULL,
+        id VARCHAR(36) PRIMARY KEY,
+        userID VARCHAR(36) NOT NULL,
         content TEXT NOT NULL,
         createdAt TEXT NOT NULL,
-        FOREIGN KEY (userID) REFERENCES users(id)
-    )
+        parentPostID VARCHAR(36), -- Reference to the parent post if this is a reply
+        FOREIGN KEY (userID) REFERENCES users(id),
+        FOREIGN KEY (parentPostID) REFERENCES posts(id)
+)
 `);
 
 // Create likes table
 db.run(`
     CREATE TABLE IF NOT EXISTS likes (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        userID INTEGER NOT NULL,
-        postID INTEGER NOT NULL,
+        userID VARCHAR(36) NOT NULL,
+        postID VARCHAR(36) NOT NULL,
+        PRIMARY KEY (userID, postID),
         FOREIGN KEY (userID) REFERENCES users(id),
         FOREIGN KEY (postID) REFERENCES posts(id)
     )
@@ -37,13 +39,13 @@ db.run(`
 
 // Create follows table
 db.run(`
-    CREATE TABLE IF NOT EXISTS follows (
-        followerID INTEGER NOT NULL,
-        followeeID INTEGER NOT NULL,
-        PRIMARY KEY (followerID, followeeID),
-        FOREIGN KEY (followerID) REFERENCES users(id),
-        FOREIGN KEY (followeeID) REFERENCES users(id)
-    )
+create table if not exists follows (
+    userID VARCHAR(36) NOT NULL,
+    isFollowingID VARCHAR(36) NOT NULL,
+    PRIMARY KEY (userID, isFollowingID),
+    FOREIGN KEY (userID) REFERENCES users(id),
+    FOREIGN KEY (isFollowingID) REFERENCES users(id)
+)
 `);
 
 db.close((err) => {
