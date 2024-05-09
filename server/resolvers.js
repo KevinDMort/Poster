@@ -4,6 +4,7 @@ import { addLike } from './db/like.js'
 import { addFollow } from './db/follow.js';
 import { getPostDetails, getTimelinePosts } from './db/posts.js';
 import { getUserByID } from './db/users.js';
+import {getFollowedUsers} from './db/follow.js'
 
 export const resolvers = {
   Query: {
