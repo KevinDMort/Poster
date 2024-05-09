@@ -9,7 +9,7 @@ export async function getPost(id)
         content: "Test post",
         createdAt: "09-05-2024",
         likes: [{ id: `${id}`, username: "Test", password: "Test password", email: "Test@me.com" }],
-        replies: [], // Empty array instead of [{}]
+        replies: [], 
         parentPost: null
     }
 }
