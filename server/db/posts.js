@@ -2,6 +2,7 @@
 import { generateID } from './connection.js';
 import { getUsersFollowedByUserID } from './follow.js'
 import moment from 'moment';
+import { connection } from './connection.js';
 
 
 export async function getPostDetails(postID, offset, limit) {
@@ -36,7 +37,7 @@ export async function getPostDetails(postID, offset, limit) {
 export async function calculateLikesCount(postID) {
   try {
     const likesCount = await connection('likes')
-      .count('id as likesCount')
+      .count('likes.postID as likesCount')
       .where({ postID })
       .first();
 
@@ -47,25 +48,23 @@ export async function calculateLikesCount(postID) {
   }
 }
 
-export async function getTimelinePosts(userId, offset, limit){
-    try {
-        const followerUserIds = await getUsersFollowedByUserID(userId);
-        const followeeIDs = followerUserIds.map((follower) => follower.followeeID);
-        
-        const posts = await connection('posts')
-            .select('posts.*')
-            .count('likes.id as likesCount')
-            .leftJoin('likes', 'posts.id', 'likes.postID')
-            .whereIn('userID', followeeIDs)
-            .orderBy('createdAt', 'desc')
-            .groupBy('posts.id')
-            .offset(offset)
-            .limit(limit);
-            return posts;}
-            catch (error){
-            console.error('Error fetching timeline posts:', error);
-            return [];
-          }
+export async function getTimelinePosts(userId, offset, limit) {
+  try {
+      const followerUserIds = await getUsersFollowedByUserID(userId);
+      const followedUserIds = followerUserIds.map((follower) => follower.isFollowingID);
+      
+      const posts = await connection('posts')
+      .select('posts.*')
+      .whereIn('userID', followedUserIds)
+      .orderBy('createdAt', 'desc')
+      .offset(offset)
+      .limit(limit);
+  
+  return posts;
+  } catch (error) {
+      console.error('Error fetching timeline posts:', error);
+      return [];
+  }
 }
 export async function addPost(userID, content) {
   const createdAt = moment().format();

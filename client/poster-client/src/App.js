@@ -25,7 +25,6 @@ function App() {
 
   return (
     <ApolloProvider client={apolloClient}>
-       <NavBar user={user} onLogout={handleLogout}/>
       <Routes>
         <Route index path="/"
               element={<HomePage />}

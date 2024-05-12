@@ -1,4 +1,4 @@
-import { addPost, addReply} from './db/posts.js'
+import { addPost, addReply, calculateLikesCount} from './db/posts.js'
 import { addUser} from './db/users.js'
 import { addLike } from './db/like.js'
 import { addFollow } from './db/follow.js';
@@ -22,7 +22,7 @@ export const resolvers = {
         throw new Error(`Error fetching user: ${error}`);
       }
     },
-    timeline: async (_root, { id }) => {
+    timeline: async (_root, { id, limit, offset }) => {
       try {
         return await getTimelinePosts(id, offset, limit);
       } catch (error) {
@@ -76,7 +76,18 @@ export const resolvers = {
         console.error('Error fetching likes for post:', error);
         return 0;
       }
-    }
+    },
+    username: async (parent) => {
+      try {
+      
+        const user = await getUserByID(parent.userID);
+        return user.username;
+      } catch (error) {
+        console.error('Error fetching username for post:', error);
+        return null;
+      }
+    },
+
   },
   User: {
     follows: async (user) => {

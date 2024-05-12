@@ -1,7 +1,7 @@
 type Query {
     post(id: ID!): Post
     user(id: ID!): User
-    timeline(id: ID!): [Post!]
+    timeline(id: ID!,  limit: Int!, offset: Int!): [Post!]
 }
 
 type Post {
@@ -10,8 +10,9 @@ type Post {
   content: String!
   createdAt: String!
   likesCount: Int
-  replies: [Post!] # List of replies to this post
-  parentPost: Post # Reference to the parent post if this is a reply
+  replies: [Post!]
+  parentPost: Post 
+  username: String!
 }
 
 type User {

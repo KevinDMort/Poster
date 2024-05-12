@@ -1,0 +1,19 @@
+.post-container {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.post-username {
+  font-weight: bold;
+}
+
+.post-content {
+  margin-top: 5px;
+}
+
+.post-created-at {
+  color: #888;
+  font-size: 0.9rem;
+  margin-top: 5px;
+}
