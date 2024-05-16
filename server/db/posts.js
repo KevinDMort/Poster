@@ -5,7 +5,7 @@ import moment from 'moment';
 import { connection } from './connection.js';
 
 
-export async function getPostDetails(postID, offset, limit) {
+export async function getPostDetails(postID) {
   try {
     const post = await connection('posts')
       .select('*')
@@ -20,9 +20,6 @@ export async function getPostDetails(postID, offset, limit) {
       const replies = await connection('posts')
         .select('*')
         .where({ parentPostID: postID })
-        .offset(offset)
-        .limit(limit);
-
       post.replies = await Promise.all(replies.map(async (reply) => {
         return getPostDetails(reply.id);
       }));

@@ -6,8 +6,8 @@ import { useNavigate } from 'react-router';
 import { getUser } from './lib/auth';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
-import NavBar from './components/NavBar';
 import { ApolloProvider } from '@apollo/client';
+import PostPage from './pages/PostPage';
 
 function App() {
   const navigate = useNavigate();
@@ -27,11 +27,11 @@ function App() {
     <ApolloProvider client={apolloClient}>
       <Routes>
         <Route index path="/"
-              element={<HomePage />}
-        />
+              element={<HomePage />}/>
        <Route path="/login"
-            element={<LoginPage onLogin={handleLogin} />}
-        />
+            element={<LoginPage onLogin={handleLogin} />}/>
+        <Route path="/post/:postId"
+            element={<PostPage />} />
       </Routes>
     </ApolloProvider>
   );

@@ -10,7 +10,7 @@ export const resolvers = {
   Query: {
     post: async (_root, { id }) => {
       try {
-        return await getPostDetails(id, offset, limit);
+        return await getPostDetails(id);
       } catch (error) {
         throw new Error(`Error fetching post: ${error}`);
       }

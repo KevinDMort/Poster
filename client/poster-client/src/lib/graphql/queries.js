@@ -19,3 +19,23 @@ export const apolloClient = new ApolloClient({
     username
   }
 }`;
+
+export const userDetailsQuery = gql`query($userId: ID!) {
+  user(id: $userId) {
+    username
+    email
+  }
+}`;
+
+export const getPostByIdQuery = gql`query($postId: ID!){
+  post(id: $postId) {
+    username
+    content
+    createdAt
+    replies {
+      username
+      content
+      createdAt
+    }
+  }
+}`;
