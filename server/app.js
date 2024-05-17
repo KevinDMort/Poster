@@ -4,17 +4,31 @@ import cors from 'cors';
 import { expressMiddleware as apolloMiddleware } from '@apollo/server/express4';
 import { readFile } from 'node:fs/promises';
 import { resolvers } from './resolvers.js';
+import { authMiddleware, handleLogin } from './auth/authMiddleware.js';
+import { getUserByID } from './db/users.js';
 
 const app = express();
 
-app.use(cors(),express.json())
+app.use(cors(), express.json(), authMiddleware);
+
+app.post('/login', handleLogin);
 const typeDefs = await readFile('./schema/schema.graphql', 'utf8');
 
+async function getContext({ req }) {
+  const context = {};
+  if (req.auth) {
+    context.user = await getUserByID(req.auth.sub);
+  }
+  return context;
+}
 
-const apolloServer = new ApolloServer({ typeDefs, resolvers });
+const apolloServer = new ApolloServer({ 
+  typeDefs, 
+  resolvers,
+});
 await apolloServer.start();
 
-app.use('/graphql', apolloMiddleware(apolloServer))
+app.use('/graphql', apolloMiddleware(apolloServer, { context: getContext }))
 
 const PORT = process.env.PORT || 9000;
 

@@ -1,59 +1,38 @@
-import { useState } from 'react';
-import { login } from '../lib/auth';
+
+import React, { useState } from 'react';
+import {login} from '../lib/auth.js'
 
 function LoginPage({ onLogin }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState(false);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setError(false);
-    const user = await login(email, password);
-    if (user) {
-      onLogin(user);
-    } else {
-      setError(true);
-    }
-  };
+  const handleLogin = async (event) => {
+     event.preventDefault();
+        setError(false);
+        const user = await login(email, password);
+        if (user) {
+        onLogin(user);
+        } else {
+        setError(true);
+        }
+  }; 
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="field">
-        <label className="label">
-          Email
-        </label>
-        <div className="control">
-          <input className="input" type="email" required value={email}
-            onChange={(event) => setEmail(event.target.value)}
-          />
+    <div>
+      <h2>Login</h2>
+      <form onSubmit={handleLogin}>
+        <div>
+          <label>Email:</label>
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
         </div>
-      </div>
-      <div className="field">
-        <label className="label">
-          Password
-        </label>
-        <div className="control">
-          <input className="input" type="password" required value={password}
-            onChange={(event) => setPassword(event.target.value)}
-          />
+        <div>
+          <label>Password:</label>
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
-      </div>
-      {error && (
-        <div className="message is-danger">
-          <p className="message-body">
-            Login failed
-          </p>
-        </div>
-      )}
-      <div className="field">
-        <div className="control">
-          <button type="submit" className="button is-link">
-            Login
-          </button>
-        </div>
-      </div>
-    </form>
+        <button type="submit">Login</button>
+      </form>
+    </div>
   );
 }
 

@@ -1,22 +1,40 @@
 import { ApolloClient, createHttpLink, gql, concat, InMemoryCache, ApolloLink } from '@apollo/client';
+import {getAccessToken} from '../auth';
 
 
 const httpLink = createHttpLink({uri: 'http://localhost:9000/graphql'});
 
+const authLink = new ApolloLink((operation, forward) => {
+  const accessToken = getAccessToken();
+     if(accessToken)
+       {
+         operation.setContext({
+          headers: {'Authorization': `Bearer ${accessToken}`}
+         });
+      }
+  return forward(operation);
+})
 export const apolloClient = new ApolloClient({
-    uri: 'http://localhost:9000/graphql',
-    cache: new InMemoryCache(),
-  });
-
+  link: concat(authLink, httpLink),
+  cache: new InMemoryCache()
+});
   export const timelineQuery = gql`
-  query timeline ($id: ID!, $limit: Int!, $offset: Int!) {
-  timeline (id: $id, limit: $limit, offset: $offset) {
+  query timeline ($limit: Int!, $offset: Int!) {
+  timeline (limit: $limit, offset: $offset) {
     id
     userID
     content
     createdAt
     likesCount
     username
+    replies {
+        id
+        userID
+        content
+        createdAt
+        likesCount
+        username
+    }
   }
 }`;
 

@@ -1,7 +1,7 @@
 type Query {
     post(id: ID!): Post
     user(id: ID!): User
-    timeline(id: ID!,  limit: Int!, offset: Int!): [Post!]
+    timeline(limit: Int!, offset: Int!): [Post!]
 }
 
 type Post {

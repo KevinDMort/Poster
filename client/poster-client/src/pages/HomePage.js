@@ -7,7 +7,7 @@ import CreatePost from '../components/CreatePost.js';
 import { createPostMutation, createReplyMutation } from '../lib/graphql/mutations.js'; // Make sure to import createReplyMutation
 import { useMutation } from '@apollo/client';
 
-function HomePage() {
+function HomePage({ onLogout }) {
   const [createPost] = useMutation(createPostMutation);
   const [createReply] = useMutation(createReplyMutation); 
   const [showCreatePostForm, setShowCreatePostForm] = useState(false);
@@ -57,6 +57,7 @@ function HomePage() {
         {!showCreatePostForm && !replyToPost && (
           <button onClick={handleNewPostButtonClick}>New Post</button>
         )}
+        <button onClick={onLogout}>Logout</button>
         {showCreatePostForm ? (
           <CreatePost onCancel={handleCreatePostCancel} onSubmit={handleCreatePostSubmit} />
         ) : (

@@ -1,8 +1,9 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import HeadElement from '../components/HeadElement';
 import Replies from '../components/Replies';
 import { usePost } from '../lib/graphql/hook.js'; // Import the custom hook
+import PostHeader from '../components/PostHeader.js';
+import Sidebar from '../components/Sidebar.js';
 
 function PostPage() {
     const { postId } = useParams();
@@ -21,11 +22,14 @@ function PostPage() {
     }
   
     return (
-      <div>
-        {/* Render the HeadElement with post details */}
-        <HeadElement post={post} />
-        {/* Render replies */}
-        <Replies post={post} />
+      <div className="container">
+        <Sidebar />
+        <div>
+          {/* Render the PostHeader with post details */}
+          <PostHeader post={post} />
+          {/* Render replies */}
+          <Replies post={post} />
+        </div>
       </div>
     );
   }

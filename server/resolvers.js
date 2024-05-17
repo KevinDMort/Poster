@@ -2,7 +2,7 @@ import { addPost, addReply, calculateLikesCount} from './db/posts.js'
 import { addUser} from './db/users.js'
 import { addLike } from './db/like.js'
 import { addFollow } from './db/follow.js';
-import { getPostDetails, getTimelinePosts } from './db/posts.js';
+import { getPostDetails, getTimelinePosts, getRepliesByPostID} from './db/posts.js';
 import { getUserByID } from './db/users.js';
 import {getFollowedUsers} from './db/follow.js'
 
@@ -22,9 +22,11 @@ export const resolvers = {
         throw new Error(`Error fetching user: ${error}`);
       }
     },
-    timeline: async (_root, { id, limit, offset }) => {
+    timeline: async (_root, { limit, offset }, context ) => {
       try {
-        return await getTimelinePosts(id, offset, limit);
+        const userId = context.user.id;
+        console.log('HERE' + userId)
+        return await getTimelinePosts(userId, offset, limit);
       } catch (error) {
         throw new Error(`Error fetching timeline: ${error}`);
       }
@@ -87,7 +89,13 @@ export const resolvers = {
         return null;
       }
     },
-
+    replies: async (parent) => {
+      try {
+        return await getRepliesByPostID(parent.id);
+      } catch (error) {
+        throw new Error(`Error fetching replies for post: ${error}`);
+      }
+    },
   },
   User: {
     follows: async (user) => {

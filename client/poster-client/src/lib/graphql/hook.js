@@ -2,10 +2,9 @@ import { useQuery } from "@apollo/client";
 import { timelineQuery, userDetailsQuery, getPostByIdQuery} from "./queries";
 import { useMutation } from "@apollo/client";
 
-export function useTimeline(id, limit, offset){
+export function useTimeline(limit, offset){
     const { data, loading, error } = useQuery(timelineQuery, {
         variables: {
-            id,
             limit, 
             offset
         },

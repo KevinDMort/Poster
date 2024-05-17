@@ -6,31 +6,39 @@ import { connection } from './connection.js';
 
 
 export async function getPostDetails(postID) {
+  return await getPostByID(postID);
+}
+// Function to fetch a single post by ID
+async function getPostByID(postID) {
   try {
     const post = await connection('posts')
       .select('*')
       .where('id', postID)
       .first();
 
-    if (!post) {
-      return null;
-    }
-
-    if (!post.parentPostID) {
-      const replies = await connection('posts')
-        .select('*')
-        .where({ parentPostID: postID })
-      post.replies = await Promise.all(replies.map(async (reply) => {
-        return getPostDetails(reply.id);
-      }));
-    }
-
-    return post;
+    return post || null;
   } catch (error) {
-    console.error('Error fetching post details by ID:', error);
-    return null;
+    console.error('Error fetching post by ID:', error);
+    throw new Error('Error fetching post');
   }
 }
+
+// Function to fetch replies for a given post ID
+export async function getRepliesByPostID(postID) {
+  try {
+    const replies = await connection('posts')
+      .select('*')
+      .where({ parentPostID: postID });
+
+    return replies;
+  } catch (error) {
+    console.error('Error fetching replies for post ID:', error);
+    throw new Error('Error fetching replies');
+  }
+}
+
+
+
 export async function calculateLikesCount(postID) {
   try {
     const likesCount = await connection('likes')
@@ -47,20 +55,33 @@ export async function calculateLikesCount(postID) {
 
 export async function getTimelinePosts(userId, offset, limit) {
   try {
-      const followerUserIds = await getUsersFollowedByUserID(userId);
-      const followedUserIds = followerUserIds.map((follower) => follower.isFollowingID);
-      
-      const posts = await connection('posts')
+    console.log('UserID:', userId);
+    console.log('Offset:', offset);
+    console.log('Limit:', limit);
+    const followerUserIds = await getUsersFollowedByUserID(userId);
+    const followedUserIds = followerUserIds.map(follower => follower.isFollowingID);
+
+    const posts = await connection('posts')
       .select('posts.*')
       .whereIn('userID', followedUserIds)
       .orderBy('createdAt', 'desc')
       .offset(offset)
       .limit(limit);
-  
-  return posts;
+
+    const postsWithReplies = await Promise.all(posts.map(async post => {
+      const replies = await getRepliesByPostID(post.id);
+      const repliesWithNestedReplies = await Promise.all(replies.map(async reply => {
+        reply.replies = await getRepliesByPostID(reply.id);
+        return reply;
+      }));
+      post.replies = repliesWithNestedReplies;
+      return post;
+    }));
+
+    return postsWithReplies;
   } catch (error) {
-      console.error('Error fetching timeline posts:', error);
-      return [];
+    console.error('Error fetching timeline posts:', error);
+    return [];
   }
 }
 export async function addPost(userID, content) {
@@ -90,7 +111,6 @@ export async function addReply(userID, parentPostID, content) {
     createdAt,
     parentPostID
   }
-  
   try {
       await connection('posts').insert(reply);
       console.log('Reply added successfully.');

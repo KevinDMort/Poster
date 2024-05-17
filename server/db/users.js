@@ -25,3 +25,12 @@ export async function getUserByID(id) {
     user.follows = null;
     return user;
 }
+export async function getUserByEmail(email) {
+  try {
+    const user = await connection('users').first().where({ email });
+    return user;
+  } catch (error) {
+    console.error('Error fetching user by ID:', error);
+    return null;
+  }
+}

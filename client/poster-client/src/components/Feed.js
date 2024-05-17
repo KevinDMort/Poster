@@ -7,7 +7,13 @@ const POSTS_PER_PAGE = 10;
 
 function Feed({userID, onReply}) {
   const [currentPage, setCurrentPage] = useState(0);
-  const {timeline, loading, error} = useTimeline(7,POSTS_PER_PAGE, (currentPage)*POSTS_PER_PAGE)
+  const {timeline, loading, error} = useTimeline(POSTS_PER_PAGE, (currentPage)*POSTS_PER_PAGE)
+
+  console.log(timeline + 'timeline');
+
+  console.log(loading + 'loading');
+
+  console.log(error + 'error');
   if(loading)
     {
       return <div>Loading...</div>
