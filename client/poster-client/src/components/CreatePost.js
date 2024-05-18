@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function CreatePost({onCancel, onSubmit }) {
+function CreatePost({ onCancel, onSubmit }) {
   const [content, setContent] = useState('');
 
   const handleChange = (event) => {
@@ -21,20 +21,22 @@ function CreatePost({onCancel, onSubmit }) {
   };
 
   return (
-    <div className="create-post">
-      <form onSubmit={handleSubmit}>
-        <textarea
-          placeholder={`What's on your mind?`}
-          value={content}
-          onChange={handleChange}
-          rows={4}
-          cols={50}
-        />
-        <div className="create-post-buttons">
-          <button type="submit">Post</button>
-          <button type="button" onClick={handleCancel}>Cancel</button>
-        </div>
-      </form>
+    <div className="create-post-container">
+      <div className="create-post">
+        <form onSubmit={handleSubmit}>
+          <textarea
+            placeholder={`What's on your mind?`}
+            value={content}
+            onChange={handleChange}
+            rows={4}
+            cols={50}
+          />
+          <div className="create-post-buttons">
+            <button type="submit" className="post-button">Post</button>
+            <button type="button" onClick={handleCancel} className="cancel-button">Cancel</button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

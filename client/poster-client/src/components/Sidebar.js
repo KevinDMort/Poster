@@ -1,13 +1,18 @@
-function Sidebar() {
-    return (
-      <div className="sidebar">
-        <ul>
-          <li><a href="#">Home</a></li>
-          <li><a href="#">Profile</a></li>
-          <li><a href="#">Explore</a></li>
-        </ul>
-      </div>
-    );
-  }
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { getUser } from '../lib/auth';
 
-  export default Sidebar;
+function Sidebar() {
+  const username = getUser().username;
+
+  return (
+    <div className="sidebar">
+      <ul>
+        <li><Link to="/">Home</Link></li>
+        <li><Link to={`/user/${username}`}>Profile</Link></li>
+      </ul>
+    </div>
+  );
+} 
+
+export default Sidebar;

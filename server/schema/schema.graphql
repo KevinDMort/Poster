@@ -24,7 +24,7 @@ type User {
 }
 
 type Mutation {
-  addPost(userID: ID!, content: String!): Post!
+  addPost(content: String!): Post!
   addReply(userID: ID!, parentPostID: ID!, content: String!): Post!
   addUser(username: String!, password: String!, email: String!): User!
   addLike(userID: ID!, postID: ID!): String

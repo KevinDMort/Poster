@@ -9,6 +9,8 @@ import PostPage from './pages/PostPage';
 import { useState } from 'react';
 import { getUser } from './lib/auth';
 import { useEffect } from 'react';
+import SignUpPage from './pages/SignUpPage';
+import ReplyPage from './pages/ReplyPage';
 
 function App() {
   const navigate = useNavigate();
@@ -32,12 +34,15 @@ function App() {
   return (
     <ApolloProvider client={apolloClient}>
       <Routes>
+        <Route index path = "signup"
+        element = {<SignUpPage/>}/>
         <Route index path="/"
               element={<HomePage onLogout={handleLogout}/>}/>
        <Route path="/login"
             element={<LoginPage onLogin={handleLogin} />}/>
         <Route path="/post/:postId"
             element={<PostPage  onLogout={handleLogout}/>} />
+        <Route path="/reply/:postId" element={<ReplyPage />} />
       </Routes>
     </ApolloProvider>
   );

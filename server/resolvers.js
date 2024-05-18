@@ -25,7 +25,6 @@ export const resolvers = {
     timeline: async (_root, { limit, offset }, context ) => {
       try {
         const userId = context.user.id;
-        console.log('HERE' + userId)
         return await getTimelinePosts(userId, offset, limit);
       } catch (error) {
         throw new Error(`Error fetching timeline: ${error}`);
@@ -33,8 +32,9 @@ export const resolvers = {
     }
   },
   Mutation: {
-    addPost: async (_root, { userID, content }) => {
+    addPost: async (_root, {content }, context) => {
       try {
+        const userID = context.user.id;
         return await addPost(userID, content);
       } catch (error) {
         throw new Error(`Error adding post: ${error}`);

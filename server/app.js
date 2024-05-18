@@ -4,7 +4,7 @@ import cors from 'cors';
 import { expressMiddleware as apolloMiddleware } from '@apollo/server/express4';
 import { readFile } from 'node:fs/promises';
 import { resolvers } from './resolvers.js';
-import { authMiddleware, handleLogin } from './auth/authMiddleware.js';
+import { authMiddleware, handleLogin, handleSignup } from './auth/authMiddleware.js';
 import { getUserByID } from './db/users.js';
 
 const app = express();
@@ -12,6 +12,7 @@ const app = express();
 app.use(cors(), express.json(), authMiddleware);
 
 app.post('/login', handleLogin);
+app.post('/signup', handleSignup);
 const typeDefs = await readFile('./schema/schema.graphql', 'utf8');
 
 async function getContext({ req }) {

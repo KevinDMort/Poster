@@ -1,19 +1,12 @@
-import {Link} from 'react-router-dom';
 import Post from '../components/Post.js'
 import { useTimeline } from '../lib/graphql/hook.js';
 import { useState } from 'react';
 
-const POSTS_PER_PAGE = 10;
+const POSTS_PER_PAGE = 4;
 
 function Feed({userID, onReply}) {
   const [currentPage, setCurrentPage] = useState(0);
   const {timeline, loading, error} = useTimeline(POSTS_PER_PAGE, (currentPage)*POSTS_PER_PAGE)
-
-  console.log(timeline + 'timeline');
-
-  console.log(loading + 'loading');
-
-  console.log(error + 'error');
   if(loading)
     {
       return <div>Loading...</div>

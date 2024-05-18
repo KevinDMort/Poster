@@ -1,31 +1,176 @@
+/* Reset default margin and padding */
+body, html {
+  margin: 0;
+  padding: 0;
+}
+
+/* Global font settings */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 16px;
+  color: #333;
+}
+
+/* Container styles */
 .container {
-    display: flex;
+  display: flex;
+  height: 100vh;
+}
+
+/* Sidebar styles */
+.sidebar {
+  width: 200px;
+  background-color: #f0f0f0;
+  border-right: 1px solid #ccc; /* Add subtle vertical line */
+}
+
+/* Sidebar menu styles */
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  padding: 10px;
+}
+
+.sidebar ul li a {
+  text-decoration: none;
+  color: #333;
+}
+
+.sidebar ul li a:hover {
+  color: #666;
+}
+
+/* Main content styles */
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+}
+
+/* Header container styles */
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  background-color: #00acee; /* Twitter blue */
+  color: #fff;
+}
+
+/* User info styles */
+.user-info h1 {
+  font-size: 24px;
+  margin: 0;
+}
+
+.user-info p {
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Follower count styles */
+.follower-count p {
+  font-size: 16px;
+  margin: 0;
+}
+
+
+/* Adjustments for smaller screens */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
   }
   
   .sidebar {
-    width: 200px;
-    background-color: #f0f0f0;
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #ccc; /* Add subtle horizontal line */
   }
   
   .main-content {
-    flex-grow: 1;
+    padding: 20px 0;
   }
-  
-  .sidebar ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .sidebar ul li {
-    padding: 10px;
-  }
-  
-  .sidebar ul li a {
-    text-decoration: none;
-    color: #333;
-  }
-  
-  .sidebar ul li a:hover {
-    color: #666;
-  }
-  
+}
+.header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  background-color: #00acee; /* Twitter blue */
+  color: #fff;
+}
+
+.buttons-container {
+  display: flex;
+  justify-content: space-between;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.logout-button, .new-post-button {
+  background-color: #fff;
+  color: #00acee;
+  border: 1px solid #00acee;
+  border-radius: 5px;
+  padding: 10px 20px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.logout-button:hover, .new-post-button:hover {
+  background-color: #00acee;
+  color: #fff;
+}
+.new-post-button {
+  order: -1; /* Push to the left */
+}
+
+.logout-button {
+  order: 1; /* Push to the right */
+}
+.create-post-container {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.create-post {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.create-post textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  resize: none;
+}
+
+.create-post-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.post-button, .cancel-button {
+  background-color: #00acee; /* Twitter blue */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.cancel-button {
+  background-color: #ccc;
+}

@@ -18,7 +18,6 @@ export async function getUserByID(id) {
     }
     try {
         await connection('users').insert(user);
-        console.log('User added successfully.');
     } catch (error) {
         console.error('Error adding user:', error);
     }
@@ -33,4 +32,14 @@ export async function getUserByEmail(email) {
     console.error('Error fetching user by ID:', error);
     return null;
   }
+}
+export async function getUserByUsername(username) {
+  try {
+    const user = await connection('users').first().where({ username });
+    return user;
+  } catch (error) {
+    console.error('Error fetching user by username:', error);
+    return null;
+  }
+
 }

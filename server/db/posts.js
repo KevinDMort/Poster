@@ -55,11 +55,9 @@ export async function calculateLikesCount(postID) {
 
 export async function getTimelinePosts(userId, offset, limit) {
   try {
-    console.log('UserID:', userId);
-    console.log('Offset:', offset);
-    console.log('Limit:', limit);
     const followerUserIds = await getUsersFollowedByUserID(userId);
-    const followedUserIds = followerUserIds.map(follower => follower.isFollowingID);
+    const followedUserIds = [userId, ...followerUserIds.map(follower => follower.isFollowingID)];
+
 
     const posts = await connection('posts')
       .select('posts.*')

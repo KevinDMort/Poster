@@ -1,6 +1,6 @@
 import { expressjwt } from 'express-jwt';
 import jwt from 'jsonwebtoken';
-import { getUserByEmail } from '../db/users.js'
+import { getUserByEmail, getUserByUsername, addUser } from '../db/users.js'
 
 
 const secret = Buffer.from('Zn8Q5tyZ/G1MHltc4F/gTkVJMlrbKiZt', 'base64');
@@ -21,4 +21,18 @@ export async function handleLogin(req, res) {
       const token = jwt.sign(claims, secret);
       res.json({ token });  
     }
-  } 
+  }
+
+  export async function handleSignup(req, res) {
+    const { username, email, password } = req.body;
+    const emailTaken = await getUserByEmail(email);
+    const usernameTaken = await getUserByUsername(username);
+    if (emailTaken || usernameTaken) {
+      res.status(400).json({ message: 'User already exists' });
+    } else {
+      const newUser = await addUser(username, password, email);
+      const claims = { sub: newUser.id, email: newUser.email };
+      const token = jwt.sign(claims, secret);
+      res.json({ token });
+    }
+  }

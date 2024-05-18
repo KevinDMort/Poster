@@ -1,19 +1,69 @@
 .post-container {
+  position: relative; /* Add position relative for absolute positioning */
   border: 1px solid #ccc;
+  border-radius: 8px;
   padding: 10px;
+  margin-bottom: 20px;
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
   margin-bottom: 10px;
 }
 
 .post-username {
   font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 5px;
 }
 
 .post-content {
-  margin-top: 5px;
+  margin-bottom: 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+.post-actions .post-reply-button {
+  border: none;
+  background-color: #00acee; /* Twitter blue */
+  color: white;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-.post-created-at {
-  color: #888;
-  font-size: 0.9rem;
-  margin-top: 5px;
+.post-actions .post-reply-button:hover {
+  background-color: #007bb6; /* Darker shade of Twitter blue */
+}
+
+.post-actions .post-like button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.post-actions .post-like button svg {
+  font-size: 24px;
+  color: #00acee; /* Twitter blue */
+  transition: color 0.3s ease; /* Add transition effect */
+}
+
+.post-actions .post-like button:hover svg {
+  color: #007bb6; /* Darker shade of Twitter blue on hover */
+}
+.interaction-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+}
+.avatar-icon {
+  width: 40px;
+  height: 40px;
+  background-color: #f0f0f0; /* Light gray */
+  border-radius: 50%; /* Make it a circle */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  color: #333; /* Dark gray */
 }
