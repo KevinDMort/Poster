@@ -9,8 +9,8 @@ export const createPostMutation = gql`
   }
 `;
 export const createReplyMutation = gql`
-  mutation($userId: ID!, $parentPostId: ID!, $content: String!) {
-    addReply(userID: $userId, parentPostID: $parentPostId, content: $content) {
+  mutation($parentPostId: ID!, $content: String!) {
+    addReply(parentPostID: $parentPostId, content: $content) {
       id
       username
       content

@@ -40,8 +40,9 @@ export const resolvers = {
         throw new Error(`Error adding post: ${error}`);
       }
     },
-    addReply: async (_root, { userID, parentPostID, content }) => {
+    addReply: async (_root, {parentPostID, content }, context) => {
       try {
+        const userID = context.user.id;
         return await addReply(userID, parentPostID, content);
       } catch (error) {
         throw new Error(`Error adding reply: ${error}`);
