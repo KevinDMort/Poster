@@ -17,32 +17,6 @@ body {
   height: 100vh;
 }
 
-/* Sidebar styles */
-.sidebar {
-  width: 200px;
-  background-color: #f0f0f0;
-  border-right: 1px solid #ccc; /* Add subtle vertical line */
-}
-
-/* Sidebar menu styles */
-.sidebar ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.sidebar ul li {
-  padding: 10px;
-}
-
-.sidebar ul li a {
-  text-decoration: none;
-  color: #333;
-}
-
-.sidebar ul li a:hover {
-  color: #666;
-}
-
 /* Main content styles */
 .main-content {
   flex-grow: 1;
@@ -173,4 +147,14 @@ body {
 
 .cancel-button {
   background-color: #ccc;
+}
+.navigation-button
+{
+  background-color: #fff;
+  color: #00acee;
+  border: 1px solid #00acee;
+  border-radius: 5px;
+  padding: 10px 20px;
+  margin-left: 10px;
+  cursor: pointer;
 }

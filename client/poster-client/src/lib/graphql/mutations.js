@@ -21,3 +21,15 @@ export const createReplyMutation = gql`
       }
     }
   }`;
+
+export const createLikeMutation = gql`
+  mutation addLike($postID: ID!) {
+    addLike(postID: $postID)
+  }
+`;
+
+export const createFollowMutation = gql`
+  mutation addFollow($isFollowingID: ID!) {
+    addFollow(isFollowingID: $isFollowingID)
+  }
+`;

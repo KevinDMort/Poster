@@ -67,3 +67,8 @@
   font-size: 20px;
   color: #333; /* Dark gray */
 }
+.likes-count {
+  font-size: 25px; /* Adjust the size as needed */
+  font-weight: bold;
+  margin-right: 10px; /* Space between the count and the icon */
+}

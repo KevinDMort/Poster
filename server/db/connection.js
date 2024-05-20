@@ -6,7 +6,7 @@ export const connection = knex({
   connection: {
     filename: './poster.db'
   },
-  useNullAsDefault: true
+  useNullAsDefault: true,
 });
 
 export function generateID()

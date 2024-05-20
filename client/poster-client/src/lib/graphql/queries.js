@@ -40,6 +40,7 @@ export const apolloClient = new ApolloClient({
 
 export const userDetailsQuery = gql`query($userId: ID!) {
   user(id: $userId) {
+    id
     username
     email
   }
@@ -47,13 +48,24 @@ export const userDetailsQuery = gql`query($userId: ID!) {
 
 export const getPostByIdQuery = gql`query($postId: ID!){
   post(id: $postId) {
+    id
     username
     content
     createdAt
+    likesCount
     replies {
       username
       content
       createdAt
     }
+  }
+}`;
+
+export const getListOfFollowed = gql `
+query{
+  followingList {
+    id
+    username
+    email
   }
 }`;

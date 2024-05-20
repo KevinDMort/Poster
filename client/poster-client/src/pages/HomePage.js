@@ -7,11 +7,14 @@ import { createPostMutation } from '../lib/graphql/mutations.js';
 import { useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 import UserHeader from '../components/UserHeader.js';
+import { getUser } from '../lib/auth.js';
 
 function HomePage({ onLogout }) {
   const navigate = useNavigate();
   const [createPost] = useMutation(createPostMutation); 
   const [showCreatePostForm, setShowCreatePostForm] = useState(false);
+  const tokenUser = getUser();
+  const userID = tokenUser?.id;
   
   const handleReply = (post) => {
     navigate(`/reply/${post.id}`);
@@ -41,11 +44,10 @@ function HomePage({ onLogout }) {
       <Sidebar />
       <div className="main-content">
         <div className="header-bar">
-        <UserHeader />
+        <UserHeader userID={userID} />
         </div>
         <div className="buttons-container">
           <button className="new-post-button" onClick={handleNewPostButtonClick}>New Post</button>
-          <button className="logout-button" onClick={onLogout}>Logout</button>
         </div>
         <div className="feed-container">
           {showCreatePostForm ? (

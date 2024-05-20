@@ -29,7 +29,15 @@ export const resolvers = {
       } catch (error) {
         throw new Error(`Error fetching timeline: ${error}`);
       }
-    }
+    },
+    followingList: async (_root, _args, context) => {
+      try {
+        const userId = context.user.id;
+        return await getFollowedUsers(userId);
+      } catch (error) {
+        throw new Error(`Error fetching following list: ${error}`);
+      }
+    },
   },
   Mutation: {
     addPost: async (_root, {content }, context) => {
@@ -55,16 +63,19 @@ export const resolvers = {
         throw new Error(`Error adding user: ${error}`);
       }
     },
-    addLike: async (_root, { userID, postID }) => {
+    addLike: async (_root, {postID}, context) => {
       try {
+        const userID = context.user.id;
+        console.log('USER ID' + userID)
         await addLike(userID, postID);
       } catch (error) {
         throw new Error(`Error adding like: ${error}`);
       }
     },
-    addFollow: async (_root, { followerUserID, followingUserID }) => {
+    addFollow: async (_root, {isFollowingID}, context) => {
       try {
-        await addFollow(followerUserID, followingUserID);
+        const userID = context.user.id;
+        await addFollow(userID, isFollowingID);
       } catch (error) {
         throw new Error(`Error adding follow: ${error}`);
       }
@@ -82,7 +93,6 @@ export const resolvers = {
     },
     username: async (parent) => {
       try {
-      
         const user = await getUserByID(parent.userID);
         return user.username;
       } catch (error) {

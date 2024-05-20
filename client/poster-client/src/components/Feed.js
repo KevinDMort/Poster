@@ -5,8 +5,9 @@ import Modal from '../components/Modal.js';
 import { useTimeline } from '../lib/graphql/hook.js';
 import { createReplyMutation } from '../lib/graphql/mutations.js';
 import { useMutation } from '@apollo/client';
+import '../styling/HomePage.css'
 
-const POSTS_PER_PAGE = 4;
+const POSTS_PER_PAGE = 3;
 
 function Feed({ userID, onReply }) {
   const [currentPage, setCurrentPage] = useState(0);
@@ -37,6 +38,9 @@ function Feed({ userID, onReply }) {
   const handleLoadMore = () => {
     setCurrentPage(prevPage => prevPage + 1);
   };
+  const handleLoadLess = () => {
+    setCurrentPage(prevPage => Math.max(prevPage - 1, 0));
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -52,7 +56,14 @@ function Feed({ userID, onReply }) {
           <Post post={post} onReply={() => handleReply(post.id)} />
         </div>
       ))}
-      <button onClick={handleLoadMore}>Load More</button>
+      <div className="button-container">
+        {currentPage > 0 && (
+          <button className="navigation-button" onClick={handleLoadLess}>Go Back</button>
+        )}
+        {timeline.length === POSTS_PER_PAGE && (
+          <button className="navigation-button" onClick={handleLoadMore}>Load More</button>
+        )}
+      </div>
       <Modal isOpen={!!replyingTo} onClose={handleCancel}>
         <CreatePost
           onCancel={handleCancel}

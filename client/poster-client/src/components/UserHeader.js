@@ -3,10 +3,9 @@ import { useUserDetails } from '../lib/graphql/hook';
 import  {getUser} from '../lib/auth.js'
 import '../styling/HomePage.css';
 
-function UserHeader () {
-  const tokenUser = getUser();
-
-  const { user, loading, error } = useUserDetails(tokenUser.id);
+function UserHeader ({userID}) {
+  console.log(userID)
+  const { user, loading, error } = useUserDetails(userID);
 
   if (loading) {
     return <div>Loading...</div>;

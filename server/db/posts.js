@@ -20,14 +20,12 @@ export const createReplyLoader = () => new DataLoader(async (postIds) => {
 export async function getPostDetails(postID) {
   return await getPostByID(postID);
 }
-// Function to fetch a single post by ID
 async function getPostByID(postID) {
   try {
     const post = await connection('posts')
       .select('*')
       .where('id', postID)
       .first();
-
     return post || null;
   } catch (error) {
     console.error('Error fetching post by ID:', error);
@@ -35,21 +33,17 @@ async function getPostByID(postID) {
   }
 }
 
-// Function to fetch replies for a given post ID
 export async function getRepliesByPostID(postID) {
   try {
     const replies = await connection('posts')
       .select('*')
-      .where({ parentPostID: postID });
-
+      .whereIn('parentPostID', postID);
     return replies;
   } catch (error) {
     console.error('Error fetching replies for post ID:', error);
     throw new Error('Error fetching replies');
   }
 }
-
-
 
 export async function calculateLikesCount(postID) {
   try {
@@ -104,8 +98,7 @@ export async function addPost(userID, content) {
 
   try {
     await connection('posts').insert(post);
-    console.log('Post added successfully.');
-    return post; // Return the added post object
+    return post; 
   } catch (error) {
     console.error('Error adding post:', error);
     throw new Error('Error adding post');
@@ -122,7 +115,6 @@ export async function addReply(userID, parentPostID, content) {
   }
   try {
       await connection('posts').insert(reply);
-      console.log('Reply added successfully.');
   } catch (error) {
       console.error('Error adding reply:', error);
   }

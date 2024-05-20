@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { timelineQuery, userDetailsQuery, getPostByIdQuery} from "./queries";
+import { timelineQuery, userDetailsQuery, getPostByIdQuery, getListOfFollowed} from "./queries";
 import { useMutation, addUserMutation } from "@apollo/client";
 
 export function useTimeline(limit, offset) {
@@ -34,4 +34,13 @@ export function useTimeline(limit, offset) {
             fetchPolicy: 'network-only'
         });
         return { post: data?.post, loading, error };
+ }
+ 
+ export function useFollowerList()
+ {
+    const { data, loading, error } = useQuery(getListOfFollowed,
+        {
+            fetchPolicy:'network-only'
+        });
+        return {followingList: data?.followingList,loading,error};
  }

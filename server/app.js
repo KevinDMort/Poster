@@ -17,12 +17,13 @@ app.post('/signup', handleSignup);
 const typeDefs = await readFile('./schema/schema.graphql', 'utf8');
 
 async function getContext({ req }) {
-  const context = {replyLoader: createReplyLoader()};
+  const replyLoader = createReplyLoader();
+  const context = { replyLoader };
   if (req.auth) {
     context.user = await getUserByID(req.auth.sub);
   }
   return context;
-} 
+}
 
 const apolloServer = new ApolloServer({ 
   typeDefs, 
