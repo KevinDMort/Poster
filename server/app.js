@@ -6,6 +6,7 @@ import { readFile } from 'node:fs/promises';
 import { resolvers } from './resolvers.js';
 import { authMiddleware, handleLogin, handleSignup } from './auth/authMiddleware.js';
 import { getUserByID } from './db/users.js';
+import { createReplyLoader } from './db/posts.js';
 
 const app = express();
 
@@ -16,12 +17,12 @@ app.post('/signup', handleSignup);
 const typeDefs = await readFile('./schema/schema.graphql', 'utf8');
 
 async function getContext({ req }) {
-  const context = {};
+  const context = {replyLoader: createReplyLoader()};
   if (req.auth) {
     context.user = await getUserByID(req.auth.sub);
   }
   return context;
-}
+} 
 
 const apolloServer = new ApolloServer({ 
   typeDefs, 

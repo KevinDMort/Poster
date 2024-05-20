@@ -10,6 +10,7 @@
     "@apollo/server": "^4.10.4",
     "apollo-server-express": "^3.13.0",
     "cookie-parser": "^1.4.6",
+    "dataloader": "^2.2.2",
     "express": "^4.19.2",
     "express-jwt": "^8.4.1",
     "graphql": "^16.8.1",

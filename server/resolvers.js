@@ -25,7 +25,7 @@ export const resolvers = {
     timeline: async (_root, { limit, offset }, context ) => {
       try {
         const userId = context.user.id;
-        return await getTimelinePosts(userId, offset, limit);
+        return await getTimelinePosts(userId, offset, limit, context);
       } catch (error) {
         throw new Error(`Error fetching timeline: ${error}`);
       }
@@ -90,9 +90,9 @@ export const resolvers = {
         return null;
       }
     },
-    replies: async (parent) => {
+    replies: async (parent, _args, context) => {
       try {
-        return await getRepliesByPostID(parent.id);
+        return await context.replyLoader.load(parent.id);
       } catch (error) {
         throw new Error(`Error fetching replies for post: ${error}`);
       }

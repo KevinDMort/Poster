@@ -3,7 +3,19 @@ import { generateID } from './connection.js';
 import { getUsersFollowedByUserID } from './follow.js'
 import moment from 'moment';
 import { connection } from './connection.js';
+import DataLoader from 'dataloader';
 
+export const createReplyLoader = () => new DataLoader(async (postIds) => {
+  const replies = await getRepliesByPostID(postIds);
+  const replyMap = replies.reduce((acc, reply) => {
+    if (!acc[reply.parentPostID]) {
+      acc[reply.parentPostID] = [];
+    }
+    acc[reply.parentPostID].push(reply);
+    return acc;
+  }, {});
+  return postIds.map(id => replyMap[id] || []);
+});
 
 export async function getPostDetails(postID) {
   return await getPostByID(postID);
@@ -53,11 +65,10 @@ export async function calculateLikesCount(postID) {
   }
 }
 
-export async function getTimelinePosts(userId, offset, limit) {
+export async function getTimelinePosts(userId, offset, limit, context) {
   try {
     const followerUserIds = await getUsersFollowedByUserID(userId);
     const followedUserIds = [userId, ...followerUserIds.map(follower => follower.isFollowingID)];
-
 
     const posts = await connection('posts')
       .select('posts.*')
@@ -66,15 +77,15 @@ export async function getTimelinePosts(userId, offset, limit) {
       .offset(offset)
       .limit(limit);
 
-    const postsWithReplies = await Promise.all(posts.map(async post => {
-      const replies = await getRepliesByPostID(post.id);
-      const repliesWithNestedReplies = await Promise.all(replies.map(async reply => {
-        reply.replies = await getRepliesByPostID(reply.id);
-        return reply;
+      const postsWithReplies = await Promise.all(posts.map(async post => {
+        const replies = await context.replyLoader.load(post.id);
+        const repliesWithNestedReplies = await Promise.all(replies.map(async reply => {
+          reply.replies = await context.replyLoader.load(reply.id);
+          return reply;
+        }));
+        post.replies = repliesWithNestedReplies;
+        return post;
       }));
-      post.replies = repliesWithNestedReplies;
-      return post;
-    }));
 
     return postsWithReplies;
   } catch (error) {
@@ -117,3 +128,5 @@ export async function addReply(userID, parentPostID, content) {
   }
   return reply;
 }
+
+
