@@ -23,7 +23,7 @@ function PostPage() {
   
     return (
       <div className="container">
-        <Sidebar />
+        <Sidebar />  
         <div>
           {/* Render the PostHeader with post details */}
           <PostHeader post={post} />
