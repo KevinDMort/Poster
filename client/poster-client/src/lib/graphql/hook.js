@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { timelineQuery, userDetailsQuery, getPostByIdQuery, getListOfFollowed, exploretimelineQuery} from "./queries";
+import { timelineQuery, userDetailsQuery, getPostByIdQuery, getListOfFollowed, exploretimelineQuery, GET_CHATS, GET_MESSAGES} from "./queries";
 
 export function useTimeline(limit, offset) {
     const { data, loading, error, fetchMore } = useQuery(timelineQuery, {
@@ -53,4 +53,19 @@ export function useExploreTimeline(limit, offset) {
             fetchPolicy:'network-only'
         });
         return {followingList: data?.followingList,loading,error};
+ }
+
+ export function useGetMessages(conversationID)
+ {
+    const {data, loading, error} = useQuery(GET_MESSAGES, {
+        variables: { conversationID },
+        fetchPolicy: 'network-only'
+      });
+      return { loading, error, data };
+ }
+
+ export function useGetChats(){
+    const { data, loading, error} = useQuery(GET_CHATS);
+    
+    return {data, loading, error};
  }

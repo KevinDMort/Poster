@@ -48,7 +48,6 @@ function Feed({ onReply }) {
   if (error) {
     return <div>Error has occurred</div>;
   }
-  console.log(timeline);
   return (
     <div>
       {timeline.map((post) => (

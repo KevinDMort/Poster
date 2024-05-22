@@ -11,6 +11,7 @@ import SignUpPage from './pages/SignUpPage';
 import UserProfile from './pages/UserProfile';
 import { getUser } from './lib/auth';
 import ExplorePage from './pages/ExplorePage';
+import ChatPage from './pages/ChatPage';
 
 function App() {
   const navigate = useNavigate();
@@ -43,6 +44,7 @@ function App() {
         <Route path="/post/:postId" element={user ? <PostPage onLogout={handleLogout} /> : <LoginPage onLogin={handleLogin} />} />
         <Route path="/user/:id" element={user ? <UserProfile onLogout={handleLogout} /> : <LoginPage onLogin={handleLogin} />} />
         <Route path="/explore" element={user ? <ExplorePage onLogout={handleLogout} /> : <LoginPage onLogin={handleLogin} />} />
+        <Route path="/chat" element={user ? <ChatPage onLogout={handleLogout} /> : <LoginPage onLogin={handleLogin} />} />
       </Routes>
     </ApolloProvider>
   );

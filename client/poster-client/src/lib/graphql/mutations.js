@@ -33,3 +33,14 @@ export const createFollowMutation = gql`
     addFollow(isFollowingID: $isFollowingID)
   }
 `;
+
+export const SEND_MESSAGE = gql`
+  mutation SendMessage($content: String!, $receiverName: String!, $receiverID: ID!, $senderName: String!) {
+    sendMessage(content: $content, receiverName: $receiverName, receiverID: $receiverID, senderName: $senderName) {
+      id
+      content
+      senderName
+      timestamp
+    }
+  }
+`;

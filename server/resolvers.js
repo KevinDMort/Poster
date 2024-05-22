@@ -7,7 +7,8 @@ import { getUserByID, getNumberOfFollowers } from './db/users.js';
 import {getFollowedUsers} from './db/follow.js'
 import { PubSub } from 'graphql-subscriptions';
 import {getMessageByConversationId, getMessagesByConversationId} from './db/messages.js'
-
+import { getChats, getLastMessageByChatId } from './db/messages.js';
+import { saveMessageToDatabase } from './db/messages.js'
 
 const pubSub = new PubSub();
 
@@ -50,35 +51,46 @@ export const resolvers = {
         throw new Error(`Error fetching following list: ${error}`);
       }
     },
-    messages: async (_root, { conversationId }, _context) => {
+    messages: async (_root, { conversationID }, _context) => {
       try {
         // Call the database function to fetch messages by conversation ID
-        const messages = await getMessagesByConversationId(conversationId);
+        const messages = await getMessagesByConversationId(conversationID);
         return messages;
       } catch (error) {
         console.error('Error fetching messages by conversation ID:', error);
         throw new Error('Error fetching messages');
       }
     },
+    chats: async (_root, _args, context) => {
+      const userId = context.user.id;
+      try {
+        const chats = await getChats(userId);
+        console.log('Fetched chats:', chats);
+        return chats;
+      } catch (error) {
+        console.error('Error fetching chats:', error);
+        throw new Error('Error fetching chats');
+      }
+    },
   },
   Mutation: {
-    sendMessage: async (_root, {content, receiver, receiverID, sender}, { user }) => {
+    sendMessage: async (_root, {content, receiverName, receiverID, senderName}, { user }) => {
       const senderID = user.id;
       const timestamp = new Date().toISOString();
-      const conversationId = [senderID, receiverID].sort().join('_');
+      const conversationID = [senderID, receiverID].sort().join('_');
       const message = {
         content,
-        sender,
+        senderName,
         senderID,
-        receiver,
+        receiverName,
         receiverID,
-        conversationId,
+        conversationID,
         timestamp,
       };
       const savedMessage = await saveMessageToDatabase(message);
 
-      pubsub.publish(`MESSAGE_RECEIVED_${conversationId}`, { messageReceived: savedMessage }); // Notify the conversation
-      pubsub.publish(`NEW_MESSAGE_RECEIVED_${receiverID}`, { newMessageReceived: savedMessage }); // Notify the receiver
+      pubSub.publish(`MESSAGE_RECEIVED_${conversationID}`, { messageReceived: savedMessage }); // Notify the conversation
+      pubSub.publish(`NEW_MESSAGE_RECEIVED_${receiverID}`, { newMessageReceived: savedMessage }); // Notify the receiver
 
       return savedMessage;
     },
@@ -125,15 +137,15 @@ export const resolvers = {
   },
   Subscription: {
     messageReceived: {
-      subscribe: async (_root, { conversationId }, { user }) => {
+      subscribe: async (_root, { conversationID }, { user }) => {
         if (!user) {
           throw new Error('Unauthorized: You must be logged in to subscribe to messages.');
         }
-        const message = await getMessageByConversationId(conversationId);
+        const message = await getMessageByConversationId(conversationID);
         if (!message || (message.senderID !== user.id && message.receiverID !== user.id)) {
           throw new Error('Unauthorized: You can only subscribe to messages you are involved in.');
         }
-        return pubsub.asyncIterator(`MESSAGE_RECEIVED_${conversationId}`);
+        return pubSub.asyncIterator(`MESSAGE_RECEIVED_${conversationID}`);
       },
     },
     newMessageReceived: {
@@ -142,7 +154,7 @@ export const resolvers = {
           throw new Error('Unauthorized: You can only subscribe to messages intended for you.');
         }
         // Subscribe to the specific receiverID event
-        return pubsub.asyncIterator(`NEW_MESSAGE_RECEIVED_${receiverID}`);
+        return pubSub.asyncIterator(`NEW_MESSAGE_RECEIVED_${receiverID}`);
       },
     },
   },
@@ -182,5 +194,28 @@ export const resolvers = {
       const followerCount = getNumberOfFollowers(user.id);
       return followerCount;
     }
-  }
+  },
+  Chat: {
+    participants: async (chat) => {
+      try {
+        const participants = await Promise.all(
+          chat.participants.map(async (user) => {
+            const userDetails = await getUserByID(user.id);
+            if (!userDetails) {
+              throw new Error(`User not found for ID: ${user.id}`);
+            }
+            return userDetails;
+          })
+        );
+        return participants;
+      } catch (error) {
+        console.error('Error fetching participants:', error);
+        throw new Error('Error fetching participants');
+      }
+    },
+  },
+
+
+
+
 };

@@ -91,3 +91,32 @@ query{
     email
   }
 }`;
+export const GET_MESSAGES = gql`
+query GetMessages($conversationID: String!) {
+  messages(conversationID: $conversationID) {
+    id
+    content
+    senderName
+    senderID
+    receiverName
+    receiverID
+    timestamp
+  }
+}
+`;
+
+export const GET_CHATS = gql`
+  query GetChats {
+    chats {
+      id
+      participants {
+        id
+        username
+      }
+      lastMessage {
+        content
+        timestamp
+      }
+    }
+  }
+`;
