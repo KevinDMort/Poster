@@ -36,3 +36,7 @@ export async function handleLogin(req, res) {
       res.json({ token });
     }
   }
+
+  export function decodeToken(token) {
+    return jwt.verify(token, secret);
+  }

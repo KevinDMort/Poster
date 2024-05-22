@@ -4,6 +4,7 @@ type Query {
     timeline(limit: Int!, offset: Int!): [Post!]
     followingList: [User!]
     exploretimeline(limit: Int!, offset: Int!): [Post!]
+    messages(conversationId: String!): [Message!]
 }
 
 type Post {
@@ -34,5 +35,19 @@ type Mutation {
   addUser(username: String!, password: String!, email: String!): User!
   addLike(postID: ID!): String
   addFollow(isFollowingID: ID!): String
+  sendMessage(content: String!, sender: String!, receiver: String!, receiverID: ID!): Message
 }
-
+type Message {
+    id: ID!
+    content: String!
+    sender: String!
+    receiver: String!
+    senderID: ID!
+    receiverID: ID!
+    timestamp: String!
+    conversationId: ID!
+  }
+type Subscription {
+  messageReceived(conversationId: String!): Message
+  newMessageReceived(receiverID: ID!): Message
+}

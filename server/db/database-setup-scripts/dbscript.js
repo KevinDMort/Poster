@@ -25,7 +25,7 @@ db.run(`
         parentPostID VARCHAR(36), -- Reference to the parent post if this is a reply
         FOREIGN KEY (userID) REFERENCES users(id),
         FOREIGN KEY (parentPostID) REFERENCES posts(id)
-)
+    )
 `);
 
 // Create likes table
@@ -41,13 +41,29 @@ db.run(`
 
 // Create follows table
 db.run(`
-create table if not exists follows (
-    userID VARCHAR(36) NOT NULL,
-    isFollowingID VARCHAR(36) NOT NULL,
-    PRIMARY KEY (userID, isFollowingID),
-    FOREIGN KEY (userID) REFERENCES users(id),
-    FOREIGN KEY (isFollowingID) REFERENCES users(id)
-)
+    CREATE TABLE IF NOT EXISTS follows (
+        userID VARCHAR(36) NOT NULL,
+        isFollowingID VARCHAR(36) NOT NULL,
+        PRIMARY KEY (userID, isFollowingID),
+        FOREIGN KEY (userID) REFERENCES users(id),
+        FOREIGN KEY (isFollowingID) REFERENCES users(id)
+    )
+`);
+
+// Create messages table
+db.run(`
+    CREATE TABLE IF NOT EXISTS messages (
+        id VARCHAR(36) PRIMARY KEY,
+        content TEXT NOT NULL,
+        senderID VARCHAR(36) NOT NULL,
+        receiverID VARCHAR(36) NOT NULL,
+        senderName TEXT NOT NULL,
+        receiverName TEXT NOT NULL,
+        conversationID TEXT NOT NULL,
+        timestamp TEXT NOT NULL,
+        FOREIGN KEY (senderID) REFERENCES users(id),
+        FOREIGN KEY (receiverID) REFERENCES users(id)
+    )
 `);
 
 db.close((err) => {
