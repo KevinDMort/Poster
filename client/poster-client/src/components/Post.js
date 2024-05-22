@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { FaThumbsUp, FaUserCircle  } from 'react-icons/fa';
 import '../styling/Post.css';
 import { useNavigate } from 'react-router-dom'; 
-import { createLikeMutation } from '../lib/graphql/mutations';
+import { createFollowMutation, createLikeMutation } from '../lib/graphql/mutations';
 import { useMutation } from '@apollo/client';
 
 function Post({ post, onReply }) {
   const [liked, setLiked] = useState(false);
   const navigate = useNavigate();
   const [addLike] = useMutation(createLikeMutation);
+  const [addFollow] =useMutation(createFollowMutation);
 
   const handleReplyClick = () => {
     onReply(post);
@@ -16,8 +17,15 @@ function Post({ post, onReply }) {
 
   const handleLikeClick = async () => {
     try {
-      console.log('LIKE CLICKED');
       const { data } = await addLike({ variables: { postID: post.id } })
+      setLiked(true);
+    } catch (error) {
+    console.error(error);
+  }
+  };
+  const handleFollowClick = async () => {
+    try {
+      const { data } = await addFollow({ variables: { isFollowingID: post.userID }})
       setLiked(true);
     } catch (error) {
     console.error(error);
@@ -63,7 +71,9 @@ function Post({ post, onReply }) {
         <div className="interaction-container"> 
           <div className="post-actions">
             <button className="post-reply-button" onClick={handleReplyClick}>Reply</button>
+            <button className="post-reply-button" onClick={handleFollowClick}>Follow</button>
           </div>
+
           <div className="post-like">
               <span className="likes-count">{post.likesCount}</span> 
               <FaThumbsUp onClick={liked ? null : handleLikeClick} /> 

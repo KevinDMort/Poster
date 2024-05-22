@@ -37,12 +37,34 @@ export const apolloClient = new ApolloClient({
     }
   }
 }`;
+export const exploretimelineQuery = gql`
+query exploretimeline ($limit: Int!, $offset: Int!) {
+  exploretimeline (limit: $limit, offset: $offset) {
+  id
+  userID
+  content
+  createdAt
+  likesCount
+  username
+  replies {
+      id
+      userID
+      content
+      createdAt
+      likesCount
+      username
+  }
+}
+}`;
 
 export const userDetailsQuery = gql`query($userId: ID!) {
   user(id: $userId) {
     id
     username
     email
+    location
+    description
+    followerCount
   }
 }`;
 

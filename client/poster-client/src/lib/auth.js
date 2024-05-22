@@ -24,13 +24,13 @@ export async function login(email, password) {
   return getUserFromToken(token);
 }
 
-export async function signup (username, email, password){
+export async function signup (username, email, password, location, description){
   const response = await fetch(`${API_URL}/signup`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ username,  email, password }),
+    body: JSON.stringify({ username,  email, password, location, description }),
   });
   if (!response.ok) {
     return null;

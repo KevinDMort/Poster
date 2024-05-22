@@ -2,8 +2,8 @@ import { addPost, addReply, calculateLikesCount} from './db/posts.js'
 import { addUser} from './db/users.js'
 import { addLike } from './db/like.js'
 import { addFollow } from './db/follow.js';
-import { getPostDetails, getTimelinePosts, getRepliesByPostID} from './db/posts.js';
-import { getUserByID } from './db/users.js';
+import { getPostDetails, getTimelinePosts, getRepliesByPostID, getExploreTimelinePosts} from './db/posts.js';
+import { getUserByID, getNumberOfFollowers } from './db/users.js';
 import {getFollowedUsers} from './db/follow.js'
 
 export const resolvers = {
@@ -26,6 +26,13 @@ export const resolvers = {
       try {
         const userId = context.user.id;
         return await getTimelinePosts(userId, offset, limit, context);
+      } catch (error) {
+        throw new Error(`Error fetching timeline: ${error}`);
+      }
+    },
+    exploretimeline: async (_root, { limit, offset }, context ) => {
+      try {
+        return await getExploreTimelinePosts(offset, limit, context);
       } catch (error) {
         throw new Error(`Error fetching timeline: ${error}`);
       }
@@ -112,6 +119,10 @@ export const resolvers = {
     follows: async (user) => {
       const followedUsers = await getFollowedUsers(user.id);
       return followedUsers;
+    },
+    followerCount: async(user) => {
+      const followerCount = getNumberOfFollowers(user.id);
+      return followerCount;
     }
   }
 };

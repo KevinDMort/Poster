@@ -24,13 +24,13 @@ export async function handleLogin(req, res) {
   }
 
   export async function handleSignup(req, res) {
-    const { username, email, password } = req.body;
+    const { username, email, password, location, description } = req.body;
     const emailTaken = await getUserByEmail(email);
     const usernameTaken = await getUserByUsername(username);
     if (emailTaken || usernameTaken) {
       res.status(400).json({ message: 'User already exists' });
     } else {
-      const newUser = await addUser(username, password, email);
+      const newUser = await addUser(username, password, email, location, description);
       const claims = { sub: newUser.id, email: newUser.email };
       const token = jwt.sign(claims, secret);
       res.json({ token });

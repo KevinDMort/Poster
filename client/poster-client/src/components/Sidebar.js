@@ -20,16 +20,20 @@ function Sidebar() {
         {user ? (
           <>
             <li><Link to={`/user/${user.id}`}>Profile</Link></li>
-            {followingList && (
-              <>
-                <li className="following-list-header">Following</li>
-                {followingList.map((follower) => (
-                  <li key={follower.id} className="following-list-item">
-                    <Link to={`/user/${follower.id}`}>{follower.username}</Link>
-                  </li>
-                ))}
-              </>
-            )}
+            <li><Link to={`/explore`}>Explore</Link></li>
+            <li><Link to={`/chat`}>Private Message</Link></li>
+            <div className="following-list-container"> {/* New container for the following list */}
+              {followingList && (
+                <div className="following-list"> {/* Added div for styling */}
+                  <li className="following-list-header">Following</li>
+                  {followingList.map((follower) => (
+                    <li key={follower.id} className="following-list-item">
+                      <Link to={`/user/${follower.id}`}>{follower.username}</Link>
+                    </li>
+                  ))}
+                </div>
+              )}
+            </div>
             {loading && <li>Loading...</li>}
             {error && <li>Error occurred: {error.message}</li>}
           </>

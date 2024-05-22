@@ -9,12 +9,14 @@ export async function getUserByID(id) {
       return null;
     }
   }
-  export async function addUser(username, password, email) {
+  export async function addUser(username, password, email, location, description) {
     const user = {
         id: generateID(),
         username,
         password,
-        email
+        email,
+        location, 
+        description
     }
     try {
         await connection('users').insert(user);
@@ -42,4 +44,17 @@ export async function getUserByUsername(username) {
     return null;
   }
 
+}
+
+export async function getNumberOfFollowers(userID){
+  try {
+    const result = await connection('follows')
+    .count('userID as followerCount')
+    .where({ isFollowingID: userID })
+    .first();
+    return result ? result.followerCount : 0;
+  } catch (error) {
+    console.error('Error calculating likes count for post:', error);
+    return 0;
+  }
 }

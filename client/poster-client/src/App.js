@@ -1,19 +1,20 @@
 import './App.css';
 import { apolloClient } from './lib/graphql/queries';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import { ApolloProvider } from '@apollo/client';
 import PostPage from './pages/PostPage';
-import { useState } from 'react';
-import { getUser } from './lib/auth';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import SignUpPage from './pages/SignUpPage';
 import UserProfile from './pages/UserProfile';
+import { getUser } from './lib/auth';
+import ExplorePage from './pages/ExplorePage';
 
 function App() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [user, setUser] = useState(getUser);
 
   const handleLogin = (user) => {
@@ -25,25 +26,23 @@ function App() {
     setUser(null);
     navigate('/login');
   };
+
   useEffect(() => {
-    // Redirect to login page if user is not authenticated
-    if (!user) {
+    const publicPaths = ['/login', '/signup'];
+    if (!user && !publicPaths.includes(location.pathname)) {
       navigate('/login');
     }
-  }, [user, navigate]);
+  }, [user, navigate, location]);
+
   return (
     <ApolloProvider client={apolloClient}>
       <Routes>
-        <Route index path = "signup"
-        element = {<SignUpPage/>}/>
-        <Route index path="/"
-              element={<HomePage onLogout={handleLogout}/>}/>
-       <Route path="/login"
-            element={<LoginPage onLogin={handleLogin} />}/>
-        <Route path="/post/:postId"
-            element={<PostPage  onLogout={handleLogout}/>} />
-        <Route path="/user/:id"
-            element={<UserProfile onLogout={handleLogout}/>} />
+        <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+        <Route path="/" element={user ? <HomePage onLogout={handleLogout} /> : <LoginPage onLogin={handleLogin} />} />
+        <Route path="/post/:postId" element={user ? <PostPage onLogout={handleLogout} /> : <LoginPage onLogin={handleLogin} />} />
+        <Route path="/user/:id" element={user ? <UserProfile onLogout={handleLogout} /> : <LoginPage onLogin={handleLogin} />} />
+        <Route path="/explore" element={user ? <ExplorePage onLogout={handleLogout} /> : <LoginPage onLogin={handleLogin} />} />
       </Routes>
     </ApolloProvider>
   );

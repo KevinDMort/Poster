@@ -2,7 +2,7 @@ import { connection } from './connection.js';
 
 export async function getUsersFollowedByUserID(userID){
     try {
-        const followers = await connection('follows').where({ isFollowingId: userID });
+        const followers = await connection('follows').where({ userID: userID });
         return followers;
       } catch (error) {
         console.error('Error fetching followers by user ID:', error);

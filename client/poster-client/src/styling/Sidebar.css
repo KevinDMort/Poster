@@ -1,12 +1,12 @@
 .sidebar {
-  width: 250px;
-  background-color: #f4f4f4;
+  font-family: 'Open Sans', sans-serif;
+  width: 175px;
   padding: 15px;
-  height: 100vh; /* Full height */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  position: relative; /* To position logout button absolutely */
+  position: relative;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .sidebar-menu {
@@ -21,24 +21,41 @@
 
 .sidebar-menu a {
   text-decoration: none;
-  color: #333;
+  color: #0a0101;
   font-size: 18px;
 }
 
 .logout-container {
   position: absolute;
-  bottom: 15px; /* Adjust this value as needed */
-  left: 0px;   /* Adjust this value as needed */
-  right: 15px;  /* Adjust this value as needed */
+  bottom: 10px;
+  left: -5px;
+  right: 10px;
 }
 
 .logout-button {
   width: 100%;
   padding: 10px;
+  background-color: #00acee;
+  color: #fff;
+  border: none;
+  cursor: pointer;
 }
+
 .logout-button:hover {
   background-color: #ff1a1a;
 }
+
+.following-list-container {
+  max-height: 30vh; /* Maximum height */
+  overflow-y: auto; /* Enable vertical scroll */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Soft shadow */
+}
+
+.following-list {
+  padding: 10px;
+}
+
 .following-list-header {
   font-weight: bold;
   padding: 5px;

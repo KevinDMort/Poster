@@ -1,19 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Post from '../components/Post.js';
 import CreatePost from '../components/CreatePost.js';
 import Modal from '../components/Modal.js';
-import { useTimeline } from '../lib/graphql/hook.js';
+import { useExploreTimeline } from '../lib/graphql/hook.js';
 import { createReplyMutation } from '../lib/graphql/mutations.js';
 import { useMutation } from '@apollo/client';
 import '../styling/HomePage.css'
+import Sidebar from '../components/Sidebar.js';
 
 const POSTS_PER_PAGE = 4;
 
-function Feed({ onReply }) {
+function ExplorePage() {
   const [currentPage, setCurrentPage] = useState(0);
   const [createReply] = useMutation(createReplyMutation);
   const [replyingTo, setReplyingTo] = useState(null); // Track the post being replied to
-  const {timeline, loading, error } = useTimeline(POSTS_PER_PAGE, currentPage * POSTS_PER_PAGE);
+  const {exploretimeline, loading, error } = useExploreTimeline(POSTS_PER_PAGE, currentPage * POSTS_PER_PAGE);
+
 
   const handleReply = (post) => {
     setReplyingTo(post);
@@ -46,12 +48,17 @@ function Feed({ onReply }) {
     return <div>Loading...</div>;
   }
   if (error) {
-    return <div>Error has occurred</div>;
+    return <div>Error: {error.message}</div>;
   }
-  console.log(timeline);
+  if (!exploretimeline) {
+    return <div>No data available.</div>;
+  }
+
   return (
-    <div>
-      {timeline.map((post) => (
+    <div className="container">
+      <Sidebar />
+      <div className="main-content">
+      {exploretimeline.map((post) => (
         <div key={post.id}>
           <Post post={post} onReply={() => handleReply(post.id)} />
         </div>
@@ -60,7 +67,7 @@ function Feed({ onReply }) {
         {currentPage > 0 && (
           <button className="navigation-button" onClick={handleLoadLess}>Go Back</button>
         )}
-        {timeline.length === POSTS_PER_PAGE && (
+        {exploretimeline.length === POSTS_PER_PAGE && (
           <button className="navigation-button" onClick={handleLoadMore}>Load More</button>
         )}
       </div>
@@ -71,7 +78,8 @@ function Feed({ onReply }) {
         />
       </Modal>
     </div>
+    </div>
   );
 }
 
-export default Feed;
+export default ExplorePage;

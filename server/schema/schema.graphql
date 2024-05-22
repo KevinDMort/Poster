@@ -3,6 +3,7 @@ type Query {
     user(id: ID!): User
     timeline(limit: Int!, offset: Int!): [Post!]
     followingList: [User!]
+    exploretimeline(limit: Int!, offset: Int!): [Post!]
 }
 
 type Post {
@@ -22,6 +23,9 @@ type User {
     password: String!
     email: String!
     follows: [User!]
+    location: String
+    description: String
+    followerCount: Int
 }
 
 type Mutation {

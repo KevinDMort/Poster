@@ -1,4 +1,5 @@
 import sqlite3 from 'sqlite3';
+import { generateID } from '../connection.js';
 
 // Connect to the SQLite database (or create it if it doesn't exist)
 const db = new sqlite3.Database('poster.db');
@@ -20,14 +21,23 @@ function generateRandomEmail() {
   return generateRandomString(10) + '@' + randomDomain;
 }
 
+const users = [];
+const posts = [];
+
 // Generate and insert test data into the users table
 const numberOfUsers = 10;
 for (let i = 0; i < numberOfUsers; i++) {
+  const id = generateID();
   const username = 'user' + i;
   const password = generateRandomString(8);
   const email = generateRandomEmail();
+  const location = 'Location ' + i;
+  const description = 'Description for user ' + i;
 
-  db.run(`INSERT INTO users (id, username, password, email) VALUES (?, ?, ?, ?)`, [i, username, password, email], (err) => {
+  users.push(id);
+
+  db.run(`INSERT INTO users (id, username, password, email, location, description) VALUES (?, ?, ?, ?, ?, ?)`, 
+    [id, username, password, email, location, description], (err) => {
     if (err) {
       console.error('Error inserting user:', err);
     } else {
@@ -39,12 +49,16 @@ for (let i = 0; i < numberOfUsers; i++) {
 // Generate and insert test data into the posts table
 const numberOfPosts = 20;
 for (let i = 0; i < numberOfPosts; i++) {
-  const userID = Math.floor(Math.random() * numberOfUsers);
+  const id = generateID();
+  const userID = users[Math.floor(Math.random() * numberOfUsers)];
   const content = 'This is post number ' + i;
   const createdAt = new Date().toISOString();
-  const parentPostID = i > 0 ? Math.floor(Math.random() * i) : null;
+  const parentPostID = i > 0 ? posts[Math.floor(Math.random() * i)] : null;
 
-  db.run(`INSERT INTO posts (id, userID, content, createdAt, parentPostID) VALUES (?, ?, ?, ?, ?)`, [i, userID, content, createdAt, parentPostID], (err) => {
+  posts.push(id);
+
+  db.run(`INSERT INTO posts (id, userID, content, createdAt, parentPostID) VALUES (?, ?, ?, ?, ?)`, 
+    [id, userID, content, createdAt, parentPostID], (err) => {
     if (err) {
       console.error('Error inserting post:', err);
     } else {
@@ -56,8 +70,8 @@ for (let i = 0; i < numberOfPosts; i++) {
 // Generate and insert test data into the likes table
 const numberOfLikes = 30;
 for (let i = 0; i < numberOfLikes; i++) {
-  const userID = Math.floor(Math.random() * numberOfUsers);
-  const postID = Math.floor(Math.random() * numberOfPosts);
+  const userID = users[Math.floor(Math.random() * numberOfUsers)];
+  const postID = posts[Math.floor(Math.random() * numberOfPosts)];
 
   db.run(`INSERT INTO likes (userID, postID) VALUES (?, ?)`, [userID, postID], (err) => {
     if (err) {
@@ -71,8 +85,8 @@ for (let i = 0; i < numberOfLikes; i++) {
 // Generate and insert test data into the follows table
 const numberOfFollows = 40;
 for (let i = 0; i < numberOfFollows; i++) {
-  const userID = Math.floor(Math.random() * numberOfUsers);
-  const isFollowingID = Math.floor(Math.random() * numberOfUsers);
+  const userID = users[Math.floor(Math.random() * numberOfUsers)];
+  const isFollowingID = users[Math.floor(Math.random() * numberOfUsers)];
 
   db.run(`INSERT INTO follows (userID, isFollowingID) VALUES (?, ?)`, [userID, isFollowingID], (err) => {
     if (err) {

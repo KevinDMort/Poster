@@ -9,7 +9,9 @@ db.run(`
         id VARCHAR(36) PRIMARY KEY,
         username TEXT UNIQUE NOT NULL,
         password TEXT NOT NULL,
-        email TEXT UNIQUE NOT NULL
+        email TEXT UNIQUE NOT NULL,
+        location TEXT NOT NULL,
+        description TEXT NOT NULL
     )
 `);
 

@@ -121,4 +121,26 @@ export async function addReply(userID, parentPostID, content) {
   return reply;
 }
 
+export async function getExploreTimelinePosts(offset, limit, context) {
+  try {
+    const posts = await connection('posts')
+      .select('posts.*')
+      .orderBy('createdAt', 'desc')
+      .offset(offset)
+      .limit(limit);
 
+      const postsWithReplies = await Promise.all(posts.map(async post => {
+        const replies = await context.replyLoader.load(post.id);
+        const repliesWithNestedReplies = await Promise.all(replies.map(async reply => {
+          reply.replies = await context.replyLoader.load(reply.id);
+          return reply;
+        }));
+        post.replies = repliesWithNestedReplies;
+        return post;
+      }));
+    return postsWithReplies;
+  } catch (error) {
+    console.error('Error fetching timeline posts:', error);
+    return [];
+  }
+}
