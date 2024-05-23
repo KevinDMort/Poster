@@ -71,10 +71,12 @@ function UserProfile() {
         </div>
         <button className="navigation-button" onClick={handleStartChat}>Start Chat</button>
         <button className="navigation-button" onClick={handleFollowClick}>Follow</button>
+        
         <div className="posts-container">
           {posts.map(post => (
         <Post key={post.id} post={post} onReply={handleReply} />
         ))}
+
         </div>
       </div>
       

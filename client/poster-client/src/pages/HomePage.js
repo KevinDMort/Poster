@@ -2,17 +2,17 @@ import { useState, useEffect } from 'react';
 import Feed from '../components/Feed.js';
 import Sidebar from '../components/Sidebar.js';
 import '../styling/HomePage.css';
-import CreatePost from '../components/CreatePost.js';
 import { createPostMutation } from '../lib/graphql/mutations.js';
 import { useMutation, useSubscription } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 import UserHeader from '../components/UserHeader.js';
 import { getUser } from '../lib/auth.js';
 import { NEW_MESSAGE_RECEIVED } from '../lib/graphql/subscriptions.js';
+import CreatePost from '../components/CreatePost.js';
 
 function HomePage({ onLogout }) {
   const navigate = useNavigate();
-  const [createPost] = useMutation(createPostMutation); 
+  const [createPost] = useMutation(createPostMutation);
   const [showCreatePostForm, setShowCreatePostForm] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const tokenUser = getUser();
@@ -33,13 +33,8 @@ function HomePage({ onLogout }) {
 
     if (newMessageData && newMessageData.newMessageReceived) {
       setShowNotification(true);
-  
     }
   }, [newMessageData, newMessageError, newMessageLoading]);
-
-  const handleReply = (post) => {
-    navigate(`/reply/${post.id}`);
-  };
 
   const handleCreatePost = () => {
     setShowCreatePostForm(true);
@@ -49,12 +44,8 @@ function HomePage({ onLogout }) {
     setShowCreatePostForm(false);
   };
 
-  const handleNewPostButtonClick = () => {
-    handleCreatePost(); 
-  };
-
   const handleCreatePostSubmit = (content) => {
-    createPost({ variables: { content: content }})
+    createPost({ variables: { content: content } })
       .then(() => {
         setShowCreatePostForm(false);
       })
@@ -62,7 +53,7 @@ function HomePage({ onLogout }) {
         console.error('Error creating post:', error);
       });
   };
-  
+
   return (
     <div className="container">
       <Sidebar />
@@ -71,19 +62,18 @@ function HomePage({ onLogout }) {
           <UserHeader userID={userID} />
         </div>
         <div className="buttons-container">
-          <button className="new-post-button" onClick={handleNewPostButtonClick}>New Post</button>
+          <button className="new-post-button" onClick={handleCreatePost}>New Post</button>
           {showNotification && (
-              <div className="notification">
-                New Private Message Received!
-              </div>
+            <div className="notification">
+              New Private Message Received!
+            </div>
           )}
-
         </div>
         <div className="feed-container">
           {showCreatePostForm ? (
             <CreatePost onCancel={handleCreatePostCancel} onSubmit={handleCreatePostSubmit} />
           ) : (
-            <Feed onReply={handleReply} />
+            <Feed />
           )}
         </div>
       </div>

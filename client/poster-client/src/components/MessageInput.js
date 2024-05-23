@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import '../styling/MessageInput.css';
 
-const MessageInput = ({onSendMessage}) => {
+const MessageInput = ({ onSendMessage }) => {
   const [content, setContent] = useState('');
 
   const handleSubmit = (e) => {
@@ -12,15 +13,17 @@ const MessageInput = ({onSendMessage}) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ padding: '10px', borderTop: '1px solid #ddd' }}>
+    <form onSubmit={handleSubmit} className="message-input-form">
       <input
         type="text"
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder="Type your message..."
-        style={{ width: '100%', padding: '10px' }}
+        className="message-input"
       />
-      <button type="submit">Send</button>
+      <button type="submit" className="send-button">
+        Send
+      </button>
     </form>
   );
 };

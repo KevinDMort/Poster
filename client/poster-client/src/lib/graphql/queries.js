@@ -109,11 +109,14 @@ export const getPostByIdQuery = gql`
   query($postId: ID!) {
     post(id: $postId) {
       id
+      userID
       username
       content
       createdAt
       likesCount
       replies {
+        id
+        userID
         username
         content
         createdAt
@@ -162,14 +165,15 @@ export const GET_CHATS = gql`
   }
 `;
 export const postsHistory = gql`
-  query postsforuserID($userID: ID!, $limit: Int!, $offset: Int!) {
-    postsforuserID(userID: $userID, limit: $limit, offset: $offset) {
-      id
-      username
-      userID
-      content
-      createdAt
-      likesCount
-    }
+query postsforuserID($userID: ID!, $limit: Int!, $offset: Int!){
+  postsforuserID(userID: $userID, limit: $limit , offset:$offset) {
+    id
+    username
+    userID
+    content
+    createdAt
+    likesCount
+    
   }
+}
 `;

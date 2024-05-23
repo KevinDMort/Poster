@@ -34,22 +34,18 @@ const ChatWindow = ({ chatId }) => {
     let receiverID, senderID, receiverName, senderName;
     if (messages.length > 0) {
       const lastMessage = messages[messages.length - 1];
+      console.log(lastMessage)
       if (lastMessage.senderID === currentUserID) {
         receiverID = lastMessage.receiverID;
         receiverName = lastMessage.receiverName;
-        senderName = currentUser.username;  // Ensure senderName is the current user's username
+        senderName = lastMessage.senderName;  // Ensure senderName is the current user's username
       } else {
         receiverID = lastMessage.senderID;
         receiverName = lastMessage.senderName;
-        senderName = currentUser.username;  // Ensure senderName is the current user's username
+        senderName = lastMessage.receiverName;  // Ensure senderName is the current user's username
       }
-    } else {
-      // Handle case where there are no previous messages
-      // For now, you can set default values or handle as needed
-      receiverID = ''; // Set appropriate default or handle accordingly
-      receiverName = ''; // Set appropriate default or handle accordingly
-      senderName = currentUser.username;
     }
+    console.log(content, receiverName, receiverID, senderName);
     try {
       await sendMessage({
         variables: { content, receiverName, receiverID, senderName },
