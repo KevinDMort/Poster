@@ -10,3 +10,17 @@ export const MESSAGE_RECEIVED = gql`
     }
   }
 `;
+
+export const NEW_MESSAGE_RECEIVED = gql`
+  subscription NewMessageReceived($receiverID: ID!) {
+    newMessageReceived(receiverID: $receiverID) {
+      id
+      content
+      senderID
+      receiverID
+      senderName
+      receiverName
+      timestamp
+    }
+  }
+`;

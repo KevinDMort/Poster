@@ -6,7 +6,7 @@ import '../styling/Sidebar.css';
 
 function Sidebar() {
   const user = getUser();
-  const { followingList, loading, error } = useFollowerList(); // Use the hook to get the list of followers
+  const { followingList, loading, error } = useFollowerList();
 
   const handleLogout = () => {
     logout();

@@ -26,7 +26,6 @@ function Post({ post, onReply }) {
   const handleFollowClick = async () => {
     try {
       const { data } = await addFollow({ variables: { isFollowingID: post.userID }})
-      setLiked(true);
     } catch (error) {
     console.error(error);
   }
@@ -47,20 +46,27 @@ function Post({ post, onReply }) {
     } else {
       const days = Math.floor(diffInSeconds / 86400);
       return `${days} days ago`;
-    }
+    } 
   };
 
   const handleClick = () => {
     navigate(`/post/${post.id}`);
   };
 
+  const handleUsernameClick = () => {
+    console.log(post);
+    navigate(`/user/${post.userID}`);
+  };
+  
+
   return ( 
     <div className="post-container" >
-      <div onClick={handleClick}>
-        <div className="post-header">
+      
+        <div onClick={handleUsernameClick} className="post-header">
           <FaUserCircle className="avatar-icon" />
           <p className="post-username">{post.username}</p>
         </div>
+        <div onClick={handleClick}>
         <div className="post-content">
           <p>{post.content}</p>
         </div>

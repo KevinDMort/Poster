@@ -2,7 +2,7 @@ import { addPost, addReply, calculateLikesCount} from './db/posts.js'
 import { addUser} from './db/users.js'
 import { addLike } from './db/like.js'
 import { addFollow } from './db/follow.js';
-import { getPostDetails, getTimelinePosts, getExploreTimelinePosts} from './db/posts.js';
+import { getPostDetails, getTimelinePosts, getExploreTimelinePosts, getPostsByUser} from './db/posts.js';
 import { getUserByID, getNumberOfFollowers } from './db/users.js';
 import {getFollowedUsers} from './db/follow.js'
 import { PubSub } from 'graphql-subscriptions';
@@ -53,7 +53,6 @@ export const resolvers = {
     },
     messages: async (_root, { conversationID }, _context) => {
       try {
-        // Call the database function to fetch messages by conversation ID
         const messages = await getMessagesByConversationId(conversationID);
         return messages;
       } catch (error) {
@@ -65,11 +64,19 @@ export const resolvers = {
       const userId = context.user.id;
       try {
         const chats = await getChats(userId);
-        console.log('Fetched chats:', chats);
         return chats;
       } catch (error) {
         console.error('Error fetching chats:', error);
         throw new Error('Error fetching chats');
+      }
+    },
+    postsforuserID: async (_root, { userID, limit, offset }, context) => {
+      try {
+        const posts = await getPostsByUser(userID, limit, offset);
+        return posts;
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+        throw new Error('Error fetching posts');
       }
     },
   },
@@ -89,8 +96,12 @@ export const resolvers = {
       };
       const savedMessage = await saveMessageToDatabase(message);
 
-      pubSub.publish(`MESSAGE_RECEIVED_${conversationID}`, { messageReceived: savedMessage }); // Notify the conversation
-      pubSub.publish(`NEW_MESSAGE_RECEIVED_${receiverID}`, { newMessageReceived: savedMessage }); // Notify the receiver
+          // Notify the conversation
+          pubSub.publish(`MESSAGE_RECEIVED_${conversationID}`, { messageReceived: savedMessage });
+      
+
+          // Notify the receiver
+          pubSub.publish(`NEW_MESSAGE_RECEIVED_${receiverID}`, { newMessageReceived: savedMessage });
 
       return savedMessage;
     },
@@ -153,7 +164,6 @@ export const resolvers = {
         if (receiverID !== user.id) {
           throw new Error('Unauthorized: You can only subscribe to messages intended for you.');
         }
-        // Subscribe to the specific receiverID event
         return pubSub.asyncIterator(`NEW_MESSAGE_RECEIVED_${receiverID}`);
       },
     },

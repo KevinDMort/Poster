@@ -42,28 +42,32 @@ export async function getMessagesByConversationId(conversationID) {
 
   export const getChats = async (userId) => {
     try {
+      // Fetch the latest message for each conversation involving the user
       const conversations = await connection('messages')
         .select('conversationID')
+        .max('timestamp as latestTimestamp')
         .where('senderID', userId)
         .orWhere('receiverID', userId)
-        .distinct('conversationID');
-  
+        .groupBy('conversationID')
+        .orderBy('latestTimestamp', 'desc');
+      
+      // Fetch chat details for each conversation
       const chatDetails = await Promise.all(
         conversations.map(async (conversation) => {
           const lastMessage = await connection('messages')
             .where('conversationID', conversation.conversationID)
             .orderBy('timestamp', 'desc')
             .first();
-  
+    
           // Fetch participants' details
           const sender = await getUserByID(lastMessage.senderID);
           const receiver = await getUserByID(lastMessage.receiverID);
-  
+    
           if (!sender || !receiver) {
             console.error('Error fetching participants:', { sender, receiver });
             throw new Error('Error fetching participants');
           }
-  
+    
           return {
             id: conversation.conversationID,
             participants: [sender, receiver],
@@ -71,7 +75,7 @@ export async function getMessagesByConversationId(conversationID) {
           };
         })
       );
-  
+    
       return chatDetails;
     } catch (error) {
       console.error('Error fetching chats:', error);

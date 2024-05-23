@@ -32,7 +32,7 @@ function getWsContext({ connectionParams }) {
   const accessToken = connectionParams?.accessToken;
   if (accessToken) {
     const payload = decodeToken(accessToken);
-    return { user: payload.sub };
+    return { user: { id: payload.sub, email: payload.email } };
   }
   return {};
 }

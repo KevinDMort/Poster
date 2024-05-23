@@ -3,10 +3,14 @@ import { useMutation, useSubscription } from '@apollo/client';
 import MessageInput from './MessageInput';
 import { useGetMessages } from '../lib/graphql/hook.js';
 import { MESSAGE_RECEIVED } from '../lib/graphql/subscriptions.js';
-import {SEND_MESSAGE} from '../lib/graphql/mutations.js'
-
+import { SEND_MESSAGE } from '../lib/graphql/mutations.js';
+import { getUser } from '../lib/auth.js';
+import { formatDistanceToNow } from 'date-fns';
+import '../styling/ChatWindow.css'; // Make sure to create and import this CSS file
 
 const ChatWindow = ({ chatId }) => {
+  const currentUser = getUser();
+  const currentUserID = currentUser.id;
   const { loading, error, data, refetch } = useGetMessages(chatId);
   const { data: subscriptionData } = useSubscription(MESSAGE_RECEIVED, {
     variables: { conversationID: chatId },
@@ -27,16 +31,33 @@ const ChatWindow = ({ chatId }) => {
   }, [subscriptionData]);
 
   const handleSendMessage = async (content) => {
-    // Assume you have receiver and sender information available
-    const receiverName = 'receiver_username';
-    const receiverID = 'receiver_id';
-    const senderName = 'sender_username';
-
-    await sendMessage({
-      variables: { content, receiverName, receiverID, senderName },
-    });
-
-    refetch();
+    let receiverID, senderID, receiverName, senderName;
+    if (messages.length > 0) {
+      const lastMessage = messages[messages.length - 1];
+      if (lastMessage.senderID === currentUserID) {
+        receiverID = lastMessage.receiverID;
+        receiverName = lastMessage.receiverName;
+        senderName = currentUser.username;  // Ensure senderName is the current user's username
+      } else {
+        receiverID = lastMessage.senderID;
+        receiverName = lastMessage.senderName;
+        senderName = currentUser.username;  // Ensure senderName is the current user's username
+      }
+    } else {
+      // Handle case where there are no previous messages
+      // For now, you can set default values or handle as needed
+      receiverID = ''; // Set appropriate default or handle accordingly
+      receiverName = ''; // Set appropriate default or handle accordingly
+      senderName = currentUser.username;
+    }
+    try {
+      await sendMessage({
+        variables: { content, receiverName, receiverID, senderName },
+      });
+      refetch();
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
   };
 
   if (loading) {
@@ -46,18 +67,26 @@ const ChatWindow = ({ chatId }) => {
     return <div>Error has occurred</div>;
   }
 
-  console.log('HERE', messages);
   return (
-    <div>
-      {messages &&
-        messages.map(message => (
-          <div key={message.id} style={{ padding: '10px' }}>
-            <div>
-              <strong>{message.senderName ? message.senderName : 'Unknown'}:</strong> {message.content}
+    <div className="chat-window-container">
+      <div className="messages-container">
+        {messages &&
+          messages.map(message => (
+            <div
+              key={message.id}
+              className={`message-item ${
+                message.senderID === currentUserID ? 'message-sent' : 'message-received'
+              }`}
+            >
+              <div className="message-content">
+                <strong>{message.senderName ? message.senderName : 'Unknown'}:</strong> {message.content}
+              </div>
+              <div className="message-timestamp">
+                {formatDistanceToNow(new Date(message.timestamp), { addSuffix: true })}
+              </div>
             </div>
-            <div style={{ fontSize: '0.8em', color: '#666' }}>{message.timestamp}</div>
-          </div>
-        ))}
+          ))}
+      </div>
       <MessageInput onSendMessage={handleSendMessage} />
     </div>
   );

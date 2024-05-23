@@ -4,7 +4,7 @@ import { FaUserFriends, FaMapMarkerAlt, FaInfoCircle, FaUserCircle} from 'react-
 import '../styling/HomePage.css';
 
 function UserHeader ({userID}) {
-  console.log(userID)
+
   const { user, loading, error } = useUserDetails(userID);
 
   if (loading) {

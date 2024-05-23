@@ -2,6 +2,7 @@ type Query {
     post(id: ID!): Post
     user(id: ID!): User
     timeline(limit: Int!, offset: Int!): [Post!]
+    postsforuserID(userID: ID!, limit: Int!, offset: Int!): [Post!]
     followingList: [User!]
     exploretimeline(limit: Int!, offset: Int!): [Post!]
     messages(conversationID: String!): [Message!]

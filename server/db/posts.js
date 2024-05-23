@@ -32,6 +32,19 @@ async function getPostByID(postID) {
     throw new Error('Error fetching post');
   }
 }
+export async function getPostsByUser(userID, limit, offset) {
+  try {
+    const posts = await connection('posts')
+      .select('*')
+      .where('userID', userID)
+      .limit(limit)
+      .offset(offset);
+    return posts;
+  } catch (error) {
+    console.error('Error fetching posts by user ID:', error);
+    throw new Error('Error fetching posts');
+  }
+}
 
 export async function getRepliesByPostID(postID) {
   try {

@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { timelineQuery, userDetailsQuery, getPostByIdQuery, getListOfFollowed, exploretimelineQuery, GET_CHATS, GET_MESSAGES} from "./queries";
+import { timelineQuery, userDetailsQuery, getPostByIdQuery, getListOfFollowed, exploretimelineQuery, GET_CHATS, GET_MESSAGES, postsHistory} from "./queries";
 
 export function useTimeline(limit, offset) {
     const { data, loading, error, fetchMore } = useQuery(timelineQuery, {
@@ -23,7 +23,25 @@ export function useExploreTimeline(limit, offset) {
     });
 
     return { exploretimeline: data?.exploretimeline, loading, error, fetchMore };
+    
 }
+
+export function useUserPostHistory(userID, limit, offset) {
+    const { data, loading, error } = useQuery(postsHistory, {
+      variables: {
+        userID,
+        limit,
+        offset,
+      },
+      fetchPolicy: 'network-only',
+    });
+  
+    return {
+      posts: data?.postsforuserID || [],
+      loading,
+      error,
+    };
+  }
  export function useUserDetails(userId)
  { 
     const { data, loading, error } = useQuery(userDetailsQuery, {
@@ -55,14 +73,14 @@ export function useExploreTimeline(limit, offset) {
         return {followingList: data?.followingList,loading,error};
  }
 
- export function useGetMessages(conversationID)
- {
-    const {data, loading, error} = useQuery(GET_MESSAGES, {
-        variables: { conversationID },
-        fetchPolicy: 'network-only'
-      });
-      return { loading, error, data };
- }
+ export function useGetMessages(conversationID) {
+    const { data, loading, error, refetch } = useQuery(GET_MESSAGES, {
+      variables: { conversationID },
+      fetchPolicy: 'network-only'
+    });
+  
+    return { loading, error, data, refetch };
+  }
 
  export function useGetChats(){
     const { data, loading, error} = useQuery(GET_CHATS);

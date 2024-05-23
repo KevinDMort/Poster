@@ -11,8 +11,7 @@
   }
   
   .ChatListContainer {
-    width: 20%;
-    background-color: #ecf0f1;
+    width: 15%;
     border-right: 1px solid #bdc3c7;
     overflow-y: auto;
   }

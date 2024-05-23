@@ -1,4 +1,3 @@
-// src/components/ChatPage.js
 import React, { useState } from 'react';
 import ChatList from '../components/ChatList';
 import ChatWindow from '../components/ChatWindow';

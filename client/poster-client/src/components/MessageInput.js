@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 
-const MessageInput = (onSendMessage) => {
+const MessageInput = ({onSendMessage}) => {
   const [content, setContent] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (content.trim() !== '') {
-      // Pass senderName, receiverName, and receiverID along with content
       onSendMessage(content);
       setContent('');
     }
