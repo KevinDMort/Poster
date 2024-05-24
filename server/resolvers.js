@@ -121,13 +121,6 @@ export const resolvers = {
         throw new Error(`Error adding reply: ${error}`);
       }
     },
-    addUser: async (_root, { username, password, email }) => {
-      try {
-        return await addUser(username, password, email);
-      } catch (error) {
-        throw new Error(`Error adding user: ${error}`);
-      }
-    },
     addLike: async (_root, {postID}, context) => {
       try {
         const userID = context.user.id;

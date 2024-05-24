@@ -33,7 +33,6 @@ type User {
 type Mutation {
   addPost(content: String!): Post!
   addReply(parentPostID: ID!, content: String!): Post!
-  addUser(username: String!, password: String!, email: String!): User!
   addLike(postID: ID!): String
   addFollow(isFollowingID: ID!): String
   sendMessage(content: String!, senderName: String!, receiverName: String!, receiverID: ID!): Message
