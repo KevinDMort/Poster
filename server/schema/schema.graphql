@@ -6,6 +6,7 @@ type Query {
     followingList: [User!]
     exploretimeline(limit: Int!, offset: Int!): [Post!]
     messages(conversationID: String!): [Message!]
+    chats: [Chat!]
 }
 
 type Post {
@@ -55,8 +56,4 @@ type Chat {
   id: ID!
   participants: [User!]
   lastMessage: Message
-}
-
-extend type Query {
-  chats: [Chat!]
 }
