@@ -95,14 +95,10 @@ export const resolvers = {
         timestamp,
       };
       const savedMessage = await saveMessageToDatabase(message);
-
           // Notify the conversation
           pubSub.publish(`MESSAGE_RECEIVED_${conversationID}`, { messageReceived: savedMessage });
-      
-
           // Notify the receiver
           pubSub.publish(`NEW_MESSAGE_RECEIVED_${receiverID}`, { newMessageReceived: savedMessage });
-
       return savedMessage;
     },
     addPost: async (_root, {content }, context) => {

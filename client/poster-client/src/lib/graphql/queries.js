@@ -18,10 +18,8 @@ const authLink = new ApolloLink((operation, forward) => {
   return forward(operation);
 });
 
-// HTTP link for regular queries and mutations
-const httpLink = concat(authLink, createHttpLink({ uri: 'http://localhost:9000/graphql' }));
 
-// WebSocket link for subscriptions
+const httpLink = concat(authLink, createHttpLink({ uri: 'http://localhost:9000/graphql' }));
 const wsLink = new GraphQLWsLink(createClient({
   url: 'ws://localhost:9000/graphql',
   connectionParams: () => {
@@ -30,8 +28,6 @@ const wsLink = new GraphQLWsLink(createClient({
     return { accessToken: token };
   },
 }));
-
-// Function to check if an operation is a subscription
 function isSubscription(operation) {
   const definition = getMainDefinition(operation.query);
   return (
@@ -39,17 +35,12 @@ function isSubscription(operation) {
     definition.operation === OperationTypeNode.SUBSCRIPTION
   );
 }
-
-// Split link to direct operations to the correct link (HTTP or WebSocket)
 const splitLink = split(isSubscription, wsLink, httpLink);
-
-// Apollo Client setup
 export const apolloClient = new ApolloClient({
   link: splitLink,
   cache: new InMemoryCache(),
 });
 
-// GraphQL queries
 export const timelineQuery = gql`
   query timeline($limit: Int!, $offset: Int!) {
     timeline(limit: $limit, offset: $offset) {
