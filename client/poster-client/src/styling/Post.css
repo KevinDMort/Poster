@@ -1,5 +1,5 @@
 .post-container {
-  position: relative; /* Add position relative for absolute positioning */
+  position: relative; 
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 10px;
@@ -37,12 +37,12 @@
 }
 
 .post-actions .post-reply-button:hover {
-  background-color: #007bb6; /* Darker shade of Twitter blue */
+  background-color: #007bb6; 
 }
 
 post-actions .post-follow-button {
   border: none;
-  background-color: #00acee; /* Twitter blue */
+  background-color: #00acee; 
   color: white;
   padding: 8px 16px;
   border-radius: 5px;
@@ -50,7 +50,7 @@ post-actions .post-follow-button {
 }
 
 .post-actions .post-follow-button:hover {
-  background-color: #007bb6; /* Darker shade of Twitter blue */
+  background-color: #007bb6; 
 }
 
 .post-actions .post-like button {
@@ -61,12 +61,12 @@ post-actions .post-follow-button {
 
 .post-actions .post-like button svg {
   font-size: 24px;
-  color: #00acee; /* Twitter blue */
-  transition: color 0.3s ease; /* Add transition effect */
+  color: #00acee; 
+  transition: color 0.3s ease; 
 }
 
 .post-actions .post-like button:hover svg {
-  color: #007bb6; /* Darker shade of Twitter blue on hover */
+  color: #007bb6; 
 }
 .interaction-container {
   display: flex;
@@ -76,16 +76,16 @@ post-actions .post-follow-button {
 .avatar-icon {
   width: 40px;
   height: 40px;
-  background-color: #f0f0f0; /* Light gray */
-  border-radius: 50%; /* Make it a circle */
+  background-color: #f0f0f0; 
+  border-radius: 50%; 
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 20px;
-  color: #333; /* Dark gray */
+  color: #333; 
 }
 .likes-count {
-  font-size: 25px; /* Adjust the size as needed */
+  font-size: 25px; 
   font-weight: bold;
-  margin-right: 10px; /* Space between the count and the icon */
+  margin-right: 10px; 
 }

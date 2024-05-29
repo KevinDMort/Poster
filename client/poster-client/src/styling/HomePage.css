@@ -162,7 +162,7 @@ body {
 .user-detail {
   display: flex;
   align-items: center;
-  margin: 0 20px; /* Adding some margin between details */
+  margin: 0 20px; 
 }
 
 .user-detail .icon {
